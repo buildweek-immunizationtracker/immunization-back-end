@@ -14,6 +14,14 @@ function getUsers(){ // User ID
     return db('users');
 }
 
+function getUserByName(username){
+    return db('users').where({ username });
+}
+
+function addUser(user){
+    return db('users').insert(user);
+}
+
 function getPatientsByUser(id){ // User ID
     return db('patients')
         .where({ 'patients.userId': id });
