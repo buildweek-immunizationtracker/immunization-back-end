@@ -19,9 +19,6 @@ exports.up = function(knex, Promise) {
         .unsigned()
         .references('id')
         .inTable('users');
-    tbl.datetime('updateOn')
-        .notNullable()
-        .defaultTo(null);
     tbl.datetime('createdAt').defaultTo(knex.fn.now());
   });
 };
