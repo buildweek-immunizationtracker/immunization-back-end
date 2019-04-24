@@ -10,6 +10,7 @@ module.exports = {
   getPatientsByUser,
   getPatient,
   getHistory,
+  getPermittedProviders,
 };
 
 function getUsers() {
@@ -45,4 +46,13 @@ function getHistory(id) {
       'immunizations.name as immunization_name',
       'PI.appointmentDate as appointment_date'
     );
+}
+
+function getPermittedProviders(id) {
+  // User ID
+  return db('users')
+    .where({ 'users.id': id })
+    .join('permissions', { 'users.id': 'permissions.userId' })
+    .join('providers', { 'permissions.providerId': 'providers.id' })
+    .select('providers.name');
 }
