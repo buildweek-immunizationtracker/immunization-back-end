@@ -14,11 +14,11 @@ exports.up = function(knex, Promise) {
         .inTable('immunizations');
     tbl.datetime('appointmentDate')
         .notNullable();
-    tbl.integer('physicianId')
+    tbl.integer('providerId')
         .notNullable()
         .unsigned()
         .references('id')
-        .inTable('users');
+        .inTable('providers');
     tbl.datetime('createdAt').defaultTo(knex.fn.now());
   });
 };

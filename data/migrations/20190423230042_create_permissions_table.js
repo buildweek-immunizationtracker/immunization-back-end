@@ -1,12 +1,12 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('permissions', tbl => {
-    tbl.primary(['userId', 'providerId']);
+    tbl.primary(['patientId', 'providerId']);
     tbl
-      .integer('userId')
+      .integer('patientId')
       .notNullable()
       .unsigned()
       .references('id')
-      .inTable('users');
+      .inTable('patients');
     tbl
       .integer('providerId')
       .notNullable()

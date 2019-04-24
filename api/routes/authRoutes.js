@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../../config/secrets');
-const { getUserByName, addUser } = require('../../data/helpers');
+const { getUserByUsername, addUser } = require('../../data/helpers');
 
 router.post('/login', async (req, res) => {
   try {
@@ -12,11 +12,11 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({
         error: 'Request must include values for username and password.',
       });
-    const [user] = await getUserByName(username);
+    const [user] = await getUserByUsername(username);
     if (!user || !bcrypt.compareSync(password, user.password))
       throw new Error();
-    const token = jwt.sign({ role: user.role }, jwtSecret, { expiresIn: '1d' });
-    res.json({ token });
+    const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: '1d' });
+    return res.json({ token });
   } catch (error) {
     res.status(401).json({ error: 'Invalid credentials' });
   }
@@ -24,7 +24,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   try {
-    const { username, password, email, role } = req.body;
+    const { username, password, email, providerId } = req.body;
     if (!username || !password || !email)
       return res.status(400).json({
         error:
@@ -33,14 +33,15 @@ router.post('/register', async (req, res) => {
     const credentials = { username, password, email };
     const hash = bcrypt.hashSync(credentials.password, 10);
     credentials.password = hash;
-    credentials.role = role || 0;
+    credentials.providerId = providerId || null;
     const [id] = await addUser(credentials);
     if (!id) throw new Error();
-    const token = jwt.sign({ role: role || 0 }, jwtSecret, { expiresIn: '1d' });
-    res.status(201).json({ token });
+    const token = jwt.sign({ id }, jwtSecret, { expiresIn: '1d' });
+    return res.status(201).json({ token });
   } catch (error) {
+    console.log('THIS IS THE ERROR', error.message);
     if (error.message.includes('UNIQUE constraint')) {
-      res.status(400).json({ error: 'Email or username already exist.' });
+      return res.status(400).json({ error: 'Email or username already exists.' });
     }
     res.status(401).json({ error: 'Invalid credentials' });
   }
