@@ -39,9 +39,10 @@ router.post('/register', async (req, res) => {
     const token = jwt.sign({ id }, jwtSecret, { expiresIn: '1d' });
     return res.status(201).json({ token });
   } catch (error) {
-    console.log('THIS IS THE ERROR', error.message);
     if (error.message.includes('UNIQUE constraint')) {
-      return res.status(400).json({ error: 'Email or username already exists.' });
+      return res
+        .status(400)
+        .json({ error: 'Email or username already exists.' });
     }
     res.status(401).json({ error: 'Invalid credentials' });
   }
