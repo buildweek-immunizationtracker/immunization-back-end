@@ -1,6 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const { getHistory, getPatient } = require('../../data/helpers');
+const { getUser, getHistory, getPatient, addPatient } = require('../../data/helpers');
+
+router.post('/', async (req, res) => {
+  try {
+    const userId = req.decoded.id;
+    const { firstName, lastName, birthDate } = req.body;
+    if (!firstName || !lastName || !birthDate)
+      return res.status(400).json({ error: 'Request must include values for firstName, lastName, and birthDate keys.' });
+    const [user] = await getUser(userId);
+    if (!user)
+      return res.status(404).json({ error: 'No user found with that ID.'})
+    const newPatient = {
+      firstName,
+      lastName,
+      birthDate,
+      userId
+    };
+    const [patientId] = await addPatient(newPatient);
+    const [success] = await getPatient(patientId);
+    res.status(201).json({ success });
+  } catch(error) {
+    res.status(500).json({ error: error.message });
+  }
+})
 
 router.get('/:id/history', async (req, res) => {
   try {

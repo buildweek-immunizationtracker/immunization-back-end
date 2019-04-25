@@ -9,7 +9,7 @@ const authenticate = require('./middleware/authenticate');
 server.use(express.json());
 server.use('/', authRoutes);
 server.use(authenticate);
-server.use('/users', userRoutes);
+server.use('/user', userRoutes);
 server.use('/patients', patientRoutes);
 
 module.exports = server;

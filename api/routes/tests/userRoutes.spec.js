@@ -5,13 +5,7 @@ const db = require('../../../data/dbConfig');
 const testUser = {
   username: 'TestUser',
   password: 'TestPassword',
-  email: 'TestEmail@email.com',
-};
-
-const testPatient = {
-  firstName: 'Test',
-  lastName: 'Patient',
-  birthDate: '1/1/1995'
+  email: 'TestEmail',
 };
 
 let token;
@@ -22,99 +16,60 @@ beforeAll(async () => {
     .set('Content-Type', 'application/json');
   token = `Bearer ${response.body.token}`;
 });
+
 afterAll(async () => {
-  await db('users')
-    .where({ username: testUser.username })
-    .del();
-});
+  await db('users').where({ email: testUser.email }).del();
+})
 
-describe('GET /users', () => {
+describe('GET /user', () => {
   it('Should return appropriate response', async () => {
     const response = await request(server)
-      .get('/users')
+      .get('/user')
       .set('Content-Type', 'application/json')
       .set('Authorization', token);
     expect(response.status).toBe(200);
-    expect(Array.isArray(response.body.users)).toBe(true);
+
   });
 });
 
-describe('GET /users/:id/patients', () => {
-  it('Should return appropriate response', async () => {
+describe('PUT /user', () => {
+  it('Should modify user information', async () => {
     const response = await request(server)
-      .get('/users/1/patients')
-      .set('Content-Type', 'application/json')
+      .put('/user')
+      .send({ username: 'ThisIsARandomUsernameNobodyShouldHave' })
       .set('Authorization', token);
+    const user = response.body.success;
     expect(response.status).toBe(200);
-    expect(Array.isArray(response.body.patients)).toBe(true);
-  });
-  it('Should only return patients with matching userId', async () => {
-    const response = await request(server)
-      .get('/users/1/patients')
-      .set('Content-Type', 'application/json')
-      .set('Authorization', token);
-    expect(response.body.patients.every(x => x.userId === 1)).toBe(true);
+    expect(user.username).toBe('ThisIsARandomUsernameNobodyShouldHave');
+    expect(user.email).toBe(testUser.email);
   });
 });
 
-describe('POST /users/:id/patients', () => {
-  afterEach(async () => {
-    db('patients').where({ firstName: testPatient.firstName, lastName: testPatient.lastName }).del();
-  });
-
-  it('Should return appropriate response',  async () => {
-    const response = await request(server)
-      .post('/users/1/patients')
-      .send(testPatient)
-      .set('Authorization', token);
-    expect(response.status).toBe(201);
-    expect(typeof response.body.id).toBe('number');
-  });
-
-  it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
-    const { lastName, ...incorrectPatient } = testPatient;
-    const response = await request(server)
-      .post('/users/1/patients')
-      .send(incorrectPatient)
-      .set('Authorization', token);
-    expect(response.status).toBe(400);
-  });
-
-  it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
-    const { lastName, ...incorrectPatient } = testPatient;
-    const response = await request(server)
-      .post('/users/1/patients')
-      .send(incorrectPatient)
-      .set('Authorization', token);
-    expect(response.status).toBe(400);
-  });
-
-  it('Should return 404 NOT FOUND if userId is not valid', async () => {
-    const response = await request(server)
-      .post('/users/99999999/patients')
-      .send(testPatient)
-      .set('Authorization', token);
-    expect(response.status).toBe(404);
-  });
-});
-
-describe('PUT /users/:id', async () => {
-  let token;
+describe('DELETE /user', () => {
+  const userToBeDeleted = {
+    username: 'DeadManWalking',
+    password: 'testing123',
+    email: 'SomethingOrAnother@email.com'
+  };
+  let deleteToken;
   beforeAll(async () => {
     const response = await request(server)
       .post('/register')
-      .send(testUser);
-    token = `Bearer ${response.body.token}`;   
+      .send(userToBeDeleted)
+      .set('Content-Type', 'application/json');
+    deleteToken = `Bearer ${response.body.token}`;
   });
-
-  afterAll(async () => {
-    db('users').where({ username: testUser.username }).del();
+  afterAll(async () => { // To ensure deletion if tests are not successful
+    await db('users').where({ username: userToBeDeleted.username }).del();
   });
-
-  const response = await request(server)
-    .put('/users')
-    .send({ ...testUser, username: 'ThisIsARandomUsernameNobodyShouldHave' })
-    .set('Authorization', token);
-  expect(response.status).toBe(200);
-  expect(response.body.username).toBe('ThisIsARandomUsernameNobodyShouldHave');
+  it('Should remove user from database', async () => {
+    const response = await request(server)
+      .delete('/user')
+      .set('Authorization', deleteToken)
+      .set('Content-Type', 'application/json');
+    expect(response.status).toBe(200);
+    expect(response.body.usersDeleted).toBe(1);
+    const usersLeft = await db('users').where({ username: userToBeDeleted.username });
+    expect(usersLeft).toEqual([]);
+  });
 });

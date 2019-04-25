@@ -2,6 +2,7 @@ const db = require('../dbConfig');
 
 module.exports = {
   getPatient,
+  addPatient,
   getHistory,
   getPermittedProviders,
 };
