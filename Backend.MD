@@ -30,13 +30,21 @@ The receieved token will be used to access protected routes. Refer to the indivi
 
 **Output Schema**:
 
-200 Success
+* 200 Success
 
 ```js
 {
     "token": string
 }
 ```
+
+* 400 Bad Request
+
+Request is missing either or both username and password.
+
+* 401 Unauthorized
+
+Credentials invalid.
 
 ### <a name="register">`/register`</a>
 
@@ -57,16 +65,28 @@ The receieved token will be used to access protected routes. Refer to the indivi
     "username": string,
     "password": string,
     "email": string,
-    "providerId": number // to be deprecated
+    "providerId": number // optional, deprecated
+
 }
 ```
 
 **Output Schema**:
 
-201 Created
+* 201 Created
 
 ```js
 {
     "token": string
 }
 ```
+
+* 400 Bad Request
+
+Check error message:
+
+    * Missing username, password, or email
+    * Email and/or username already exists
+
+* 401 Unauthorized
+
+Invalid credentials
