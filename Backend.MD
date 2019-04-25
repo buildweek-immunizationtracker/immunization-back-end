@@ -30,6 +30,8 @@ The receieved token will be used to access protected routes. Refer to the indivi
 
 **Output Schema**:
 
+200 Success
+
 ```js
 {
     "token": string
@@ -60,6 +62,8 @@ The receieved token will be used to access protected routes. Refer to the indivi
 ```
 
 **Output Schema**:
+
+201 Created
 
 ```js
 {
