@@ -11,6 +11,11 @@ function getPatient(id) {
   return db('patients').where({ id });
 }
 
+function addPatient(patient){
+  return db('patients')
+    .insert(patient);
+}
+
 function getHistory(id) {
   // Patient ID
   return db('patients')

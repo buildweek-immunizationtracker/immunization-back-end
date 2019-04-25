@@ -8,6 +8,12 @@ const testUser = {
   email: 'TestEmail@email.com',
 };
 
+const testPatient = {
+  firstName: 'Test',
+  lastName: 'Patient',
+  birthDate: '1/1/1995'
+};
+
 let token;
 beforeAll(async () => {
   const response = await request(server)
@@ -49,4 +55,66 @@ describe('GET /users/:id/patients', () => {
       .set('Authorization', token);
     expect(response.body.patients.every(x => x.userId === 1)).toBe(true);
   });
+});
+
+describe('POST /users/:id/patients', () => {
+  afterEach(async () => {
+    db('patients').where({ firstName: testPatient.firstName, lastName: testPatient.lastName }).del();
+  });
+
+  it('Should return appropriate response',  async () => {
+    const response = await request(server)
+      .post('/users/1/patients')
+      .send(testPatient)
+      .set('Authorization', token);
+    expect(response.status).toBe(201);
+    expect(typeof response.body.id).toBe('number');
+  });
+
+  it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
+    const { lastName, ...incorrectPatient } = testPatient;
+    const response = await request(server)
+      .post('/users/1/patients')
+      .send(incorrectPatient)
+      .set('Authorization', token);
+    expect(response.status).toBe(400);
+  });
+
+  it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
+    const { lastName, ...incorrectPatient } = testPatient;
+    const response = await request(server)
+      .post('/users/1/patients')
+      .send(incorrectPatient)
+      .set('Authorization', token);
+    expect(response.status).toBe(400);
+  });
+
+  it('Should return 404 NOT FOUND if userId is not valid', async () => {
+    const response = await request(server)
+      .post('/users/99999999/patients')
+      .send(testPatient)
+      .set('Authorization', token);
+    expect(response.status).toBe(404);
+  });
+});
+
+describe('PUT /users/:id', async () => {
+  let token;
+  beforeAll(async () => {
+    const response = await request(server)
+      .post('/register')
+      .send(testUser);
+    token = `Bearer ${response.body.token}`;   
+  });
+
+  afterAll(async () => {
+    db('users').where({ username: testUser.username }).del();
+  });
+
+  const response = await request(server)
+    .put('/users')
+    .send({ ...testUser, username: 'ThisIsARandomUsernameNobodyShouldHave' })
+    .set('Authorization', token);
+  expect(response.status).toBe(200);
+  expect(response.body.username).toBe('ThisIsARandomUsernameNobodyShouldHave');
 });

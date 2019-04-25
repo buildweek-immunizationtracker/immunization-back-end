@@ -18,7 +18,8 @@ exports.up = function(knex, Promise) {
       .unsigned()
       .defaultTo(null)
       .references('id')
-      .inTable('providers');
+      .inTable('providers')
+      .onDelete('CASCADE');
     tbl.datetime('createdAt').defaultTo(knex.fn.now());
   });
 };
