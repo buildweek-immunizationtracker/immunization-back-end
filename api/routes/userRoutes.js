@@ -27,14 +27,4 @@ router.get('/:id/patients', async (req, res) => {
   }
 });
 
-router.get('/:id/permissions', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const providers = await getPermittedProviders(id);
-    res.json({ id, providers });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 module.exports = router;
