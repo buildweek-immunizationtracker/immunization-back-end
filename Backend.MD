@@ -101,6 +101,12 @@ Returns a list of all users on the database. This is more of a debug route for d
 
 #### Operation and Schemas
 
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request.
+
+---
+
 **Operation**: GET
 
 **Output Schema**:
@@ -124,4 +130,35 @@ Returns a list of all users on the database. This is more of a debug route for d
 ### <a name="users-patients">`/users/:id/patients`</a>
 
 #### Description
+
+Returns a list of all patients associated with the user account (e.g. a list of the user and her dependents she registered with the app). The user account is specified with the user id passed as the `:id`.
+
+#### Operation and Schemas
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request.
+
+---
+
+**Operation**: GET
+
+**Output Schema**:
+
+* 200 OK
+
+```js
+{
+    "patients": [
+        {
+            "id": number,
+            "firstName": string,
+            "lastName": string,
+            "age": number,
+            "userId": number,
+            "createdAt": Date
+        }
+    ]
+}
+```
 
