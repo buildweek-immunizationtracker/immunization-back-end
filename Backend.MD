@@ -134,7 +134,7 @@ _Output Schema_:
         "password": string,
         "email": string,**6702803862**
         "providerId"?: number, // q? means it may or may not be there.
-        "createdAt": Date,
+        "createdAt": DateString // string with a formatted date
     }
 }
 ```
@@ -166,7 +166,7 @@ _Output Schema_:
         "id": number,
         "username": string,
         "email": string,
-        "createdAt": Date
+        "createdAt": DateString // string with a formatted date
     }
 }
 ```
@@ -216,8 +216,109 @@ _Output Schema_:
             "lastName": string,
             "age": number,
             "userId": number,
-            "createdAt": Date
+            "createdAt": DateString // string with a formatted date
         }
     ]
 }
 ```
+
+## Patients
+
+### <a name="patient-root">`/patients`</a>
+
+#### Description
+
+Endpoint dealing with the `patient` resource. There is only operation: POST, which will create a new patient and add it into the user account currently logged in.
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+#### Operation and Schemas
+
+**POST**
+
+_Input Schema_:
+
+```js
+{
+    "firstName": string,
+    "lastName": string,
+    "birthDate": Date // double check this, Ronald
+}
+```
+
+_Output Schema_:
+
+* 201 Created
+
+```js
+{
+    "success": {
+        // Returns the created patient
+        "id": number,
+        "firstName": string,
+        "lastName": string,
+        "birthDate": string,
+        "userId": number,
+        "createdAt": DateString // string with a formatted date
+    }
+}
+```
+
+### <a name="patient-history">`/patients/:id/history`</a>
+
+#### Description
+
+Endpoint for patient's history. Has only one operation: GET, which will return all previous immunizations of a given patient. The patient's records is signified with the a patient's ID passed as `:id`.
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+#### Operations and Schemas
+
+**GET**
+
+_Output Schema_:
+
+```js
+{
+    "history": {
+        "immunization_id": number,
+        "immunization_name" string,
+        "provider_id": number,
+        "appointment_date": DateString
+    }
+}
+```
+
+### <a name="patient-permissions">`/patients/:id/permissions`</a>
+
+#### Description
+
+Endpoint for providers a patient has authorized. Has only one operation: GET, which will return all providers the patient has authorized. The patient's records is signified with the a patient's ID passed as `:id`.
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+#### Operations and Schemas
+
+**GET**
+
+_Output Schema_:
+
+```js
+{
+    "id": number, // the patient's ID
+    "providers": string[] // an array of string titles of providers
+}
+```
+
