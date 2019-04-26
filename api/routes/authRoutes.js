@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../../config/secrets');
-const { getUserByUsername, addUser } = require('../../data/helpers');
+const { getUserByUsername, addUser, addProvider } = require('../../data/helpers');
 
 router.post('/login', async (req, res) => {
   try {
@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   try {
-    const { username, password, email, providerId } = req.body;
+    const { username, password, email, providerName } = req.body;
     if (!username || !password || !email)
       return res.status(400).json({
         error:
@@ -34,7 +34,9 @@ router.post('/register', async (req, res) => {
     const credentials = { username, password, email };
     const hash = bcrypt.hashSync(credentials.password, 10);
     credentials.password = hash;
-    credentials.providerId = providerId || null;
+    let providerId = null;
+    if (providerName) [providerId] = await addProvider(providerName);
+    credentials.providerId = providerId;
     const [id] = await addUser(credentials);
     if (!id) throw new Error();
     const token = jwt.sign({ id }, jwtSecret, { expiresIn: '1d' });

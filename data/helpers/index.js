@@ -1,7 +1,8 @@
 module.exports = {
+  ...require('./providers'),
   ...require('./users'),
   ...require('./patients'),
-  ...require('./permissions'),
   ...require('./immunizations'),
   ...require('./patient_immunizations'),
+  ...require('./permissions'),
 };

@@ -7,12 +7,17 @@ const {
   addPatient,
   updatePatient,
   deletePatient,
+  giveConsentToProvider,
+  removeConsentFromProvider,
 } = require('../../data/helpers');
 
 router.get('/', async (req, res) => {
   try {
     const userId = req.decoded.id;
-    const patients = await getPatients(userId);
+    const user = await getUser(userId);
+    let patients;
+    if (user.providerId) patients = await getPatientsForProvider(user.providerId);
+    else patients = await getPatients(userId);
     res.json({ patients });
   } catch(error) {
     res.status(500).json({ error: error.message });
@@ -80,6 +85,42 @@ router.delete('/:id', async (req, res) => {
     res.json({ numberDeleted });
   } catch(error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/:id/consent', async (req, res) => {
+  try {
+    const id = req.decoded.id;
+    const patient = req.patient;
+    const { providerId } = req.body;
+    if (id === patient.userId) {
+      const [success] = await giveConsentToProvider(patient.id, providerId);
+      return res.status(201).json({ success });
+    } 
+    else res.status(403).json({ error: 'Unauthorized' });
+  } catch(error) {
+    if (error.message === 'Provider already has consent.') res.status(400);
+    else res.status(500);
+    res.json({ error: error.message });
+  }
+});
+
+router.delete('/:id/consent', async (req, res) => {
+  try {
+    const id = req.decoded.id;
+    const patient = req.patient;
+    const { providerId } = req.body;
+    if (id === patient.userId) {
+      const success = await removeConsentFromProvider(patient.id, providerId);
+      if (!success)
+        return res.status(400).json({ error: 'Provider does not currently have consent.' });
+      return res.status(201).json({ success });
+    } 
+    else res.status(403).json({ error: 'Unauthorized' });
+  } catch(error) {
+    if (error.message.includes('found with that ID.')) res.status(404);
+    else res.status(500);
+    res.json({ error: error.message });
   }
 });
 

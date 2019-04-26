@@ -7,6 +7,7 @@ module.exports = {
   updatePatient,
   deletePatient,
   getPermittedProviders,
+  getPatientsForProvider,
 };
 
 // All functions in this file should use parameters based on the `patients` table, such as `patients.id` and `patients.birthDate`
@@ -45,4 +46,17 @@ function getPermittedProviders(id) {
     .join('permissions', { 'patients.id': 'permissions.patientId' })
     .join('providers', { 'permissions.providerId': 'providers.id' })
     .select('providers.id');
+}
+
+function getPatientsForProvider(providerId){
+  return db('permissions')
+    .where({ providerId })
+    .join('patients', { 'patients.id': 'permissions.patientId' })
+    .select(
+      'patients.id',
+      'patients.firstName',
+      'patients.lastName',
+      'patients.birthDate',
+      'patients.createdAt'
+      );
 }
