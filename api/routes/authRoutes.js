@@ -46,7 +46,7 @@ router.post('/register', async (req, res) => {
         .status(400)
         .json({ error: 'Email or username already exists.' });
     }
-    res.status(401).json({ error: 'Invalid credentials' });
+    res.status(401).json({ error: error.message });
   }
 });
 
