@@ -10,19 +10,19 @@ const {
 
 router.get('/', async (req, res) => {
   try {
-    const [id] = req.decoded.id;
+    const id = req.decoded.id;
     const [result] = await getUser(id);
     const { password, ...user } = result;
     if (!user.providerId) delete user.providerId;
     return res.json({ user });
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ error: error.message });
   }
 });
 
 router.put('/', async (req, res) => {
   try {
-    const [id] = req.decoded.id;
+    const id = req.decoded.id;
     const { username, password, email } = req.body;
     const keysToUpdate = {};
     if (!username && !password && !email)

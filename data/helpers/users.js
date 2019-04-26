@@ -10,7 +10,7 @@ module.exports = {
   getPatientsByUser,
 };
 
-function getUser(id){
+function getUser(id) {
   return db('users').where({ id });
 }
 
@@ -18,12 +18,16 @@ function getUsers() {
   return db('users');
 }
 
-function updateUser(id, changes){
-  return db('users').where({ id }).update(changes);
+function updateUser(id, changes) {
+  return db('users')
+    .where({ id })
+    .update(changes);
 }
 
-function deleteUser(id){
-  return db('users').where({ id }).del();
+function deleteUser(id) {
+  return db('users')
+    .where({ id })
+    .del();
 }
 
 function getUserByUsername(username) {
@@ -31,7 +35,9 @@ function getUserByUsername(username) {
 }
 
 function addUser(user) {
-  return db('users').insert(user);
+  return db('users')
+    .returning('id')
+    .insert(user);
 }
 
 function getPatientsByUser(id) {
