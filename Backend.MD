@@ -52,7 +52,7 @@ Credentials invalid.
 
 Endpoint is responsible for registering a user. Upon successful registration, the server will save received data and respond with a token, which can be used to immediately log the user.
 
-The receieved token will be used to access protected routes. Refer to the individual protected route for information on using the token.
+The received token will be used to access protected routes. Refer to the individual protected route for information on using the token.
 
 #### Operation and Schemas
 
@@ -90,3 +90,38 @@ Check error message:
 * 401 Unauthorized
 
 Invalid credentials
+
+## Users
+
+### <a name="users-root">`/users`</a>
+
+#### Description
+
+Returns a list of all users on the database. This is more of a debug route for development rather than data to be consumed by the frontend.
+
+#### Operation and Schemas
+
+**Operation**: GET
+
+**Output Schema**:
+
+* 200 OK
+
+```js
+{
+    users: [
+        {
+            "id": number,
+            "password": string,
+            "email": string,
+            "providerId": number | null,
+            "createdAt": Date,
+        }
+    ]
+}
+```
+
+### <a name="users-patients">`/users/:id/patients`</a>
+
+#### Description
+
