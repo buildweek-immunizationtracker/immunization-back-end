@@ -1,9 +1,20 @@
 # Routes
 
-* Authentication Routes
-    * [`/login`](#login)
-    * [`/register`](#register)
+- Authentication Routes
 
+  - [`/login`](#login)
+  - [`/register`](#register)
+
+- User Routes
+
+  - [`/user`](#user-root)
+    - [GET](#user-get)
+    - [PUT](#user-put)
+    - [DELETE](#user-delete)
+  - [`/user/:id/patients`](#user-patients)
+
+- Patient Routes
+  -
 
 ## Authentication
 
@@ -17,7 +28,7 @@ The receieved token will be used to access protected routes. Refer to the indivi
 
 #### Operation and Schemas
 
-* POST
+- POST
 
 **Body Schema**:
 
@@ -30,7 +41,7 @@ The receieved token will be used to access protected routes. Refer to the indivi
 
 **Output Schema**:
 
-* 200 Success
+- 200 Success
 
 ```js
 {
@@ -38,11 +49,11 @@ The receieved token will be used to access protected routes. Refer to the indivi
 }
 ```
 
-* 400 Bad Request
+- 400 Bad Request
 
 Request is missing either or both username and password.
 
-* 401 Unauthorized
+- 401 Unauthorized
 
 Credentials invalid.
 
@@ -56,7 +67,7 @@ The received token will be used to access protected routes. Refer to the individ
 
 #### Operation and Schemas
 
-* POST
+- POST
 
 **Body Schema**:
 
@@ -72,7 +83,7 @@ The received token will be used to access protected routes. Refer to the individ
 
 **Output Schema**:
 
-* 201 Created
+- 201 Created
 
 ```js
 {
@@ -81,20 +92,20 @@ The received token will be used to access protected routes. Refer to the individ
 }
 ```
 
-* 400 Bad Request
+- 400 Bad Request
 
 Check error message:
 
     * Missing username, password, or email
     * Email and/or username already exists
 
-* 401 Unauthorized
+- 401 Unauthorized
 
 Invalid credentials
 
 ## Users
 
-### <a name="users-root">`/user`</a>
+### <a name="user-root">`/user`</a>
 
 #### Description
 
@@ -108,14 +119,13 @@ This route is _protected_. A valid token retrieved either from `/login` or `/reg
 
 ---
 
-**GET**
+<a name="user-get">**GET**</a>
 
 Returns information about the current logged in user. There is no need to specify `userId`: the user ID is read from the token passed in the Authorization header with the request.
 
-
 _Output Schema_:
 
-* 200 OK
+- 200 OK
 
 ```js
 {
@@ -131,7 +141,7 @@ _Output Schema_:
 
 There is no `providerId` if the user is a patient/account managing patients.
 
-**PUT**
+<a name="user-put">**PUT**</a>
 
 _Input Schema_:
 
@@ -147,6 +157,8 @@ At least one property must exist in JSON body. Otherwise, the route will respond
 
 _Output Schema_:
 
+- 200 OK
+
 ```js
 {
     success: {
@@ -159,9 +171,11 @@ _Output Schema_:
 }
 ```
 
-**DELETE**
+<a name="user-delete">**DELETE**</a>
 
 _Output Schema_:
+
+- 200 OK
 
 ```js
 {
@@ -169,11 +183,11 @@ _Output Schema_:
 }
 ```
 
-Returns the number of users deleted. This number should always be `1`. If it's more than `1`, contact the backend people. 
+Returns the number of users deleted. This number should always be `1`. If it's more than `1`, contact the backend people.
 
 If less than `1`, you should get a `404: Not Found` instead, signifying that the user cannot be found. Since the user to be deleted is identified by the token, a `404` may mean that the token is old and can be discarded.
 
-### <a name="users-patients">`/user/:id/patients`</a>
+### <a name="user-patients">`/user/:id/patients`</a>
 
 #### Description
 
@@ -187,11 +201,11 @@ This route is _protected_. A valid token retrieved either from `/login` or `/reg
 
 ---
 
-**Operation**: GET
+**GET**
 
-**Output Schema**:
+_Output Schema_:
 
-* 200 OK
+- 200 OK
 
 ```js
 {
@@ -207,4 +221,3 @@ This route is _protected_. A valid token retrieved either from `/login` or `/reg
     ]
 }
 ```
-
