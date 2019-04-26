@@ -133,13 +133,13 @@ _Output Schema_:
         "id": number,
         "password": string,
         "email": string,**6702803862**
-        "providerId"?: number, // q? means it may or may not be there.
+        "providerId"?: number, // ? means it may or may not be there.
         "createdAt": DateString // string with a formatted date
     }
 }
 ```
 
-There is no `providerId` if the user is a patient/account managing patients.
+There is no `providerId` if the user is a patient/an account managing patients.
 
 <a name="user-put">**PUT**</a>
 
@@ -292,7 +292,7 @@ _Output Schema_:
         "immunization_id": number,
         "immunization_name" string,
         "provider_id": number,
-        "appointment_date": DateString
+        "appointment_date": DateString // string with a formatted date
     }
 }
 ```
