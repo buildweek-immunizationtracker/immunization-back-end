@@ -11,7 +11,7 @@
 
 #### Description
 
-This endpoint is responsible for logging a user. Upon successful authentication (_with valid username and password_), the endpoint will respond with a token.
+This endpoint is responsible for logging a user. Upon successful authentication (_with valid username and password_), the endpoint will respond with a token. It will also return a boolean (_true or false_) which indicates if the user is a provider or not.
 
 The receieved token will be used to access protected routes. Refer to the individual protected route for information on using the token.
 
@@ -34,7 +34,7 @@ The receieved token will be used to access protected routes. Refer to the indivi
 
 ```js
 {
-    "token": string
+    "token": string,
 }
 ```
 
@@ -50,7 +50,7 @@ Credentials invalid.
 
 #### Description
 
-Endpoint is responsible for registering a user. Upon successful registration, the server will save received data and respond with a token, which can be used to immediately log the user.
+Endpoint is responsible for registering a user. Upon successful registration, the server will save received data and respond with a token, which can be used to immediately log the user. It will also return a boolean (_true or false_) which indicates if the user is a provider or not.
 
 The received token will be used to access protected routes. Refer to the individual protected route for information on using the token.
 
@@ -76,7 +76,8 @@ The received token will be used to access protected routes. Refer to the individ
 
 ```js
 {
-    "token": string
+    "token": string,
+    "isProvider": boolean
 }
 ```
 
@@ -97,7 +98,7 @@ Invalid credentials
 
 #### Description
 
-Returns a list of all users on the database. This is more of a debug route for development rather than data to be consumed by the frontend.
+Returns information about the current logged in user. There is no need to specify `userId`: the user ID is read from the token passed in the Authorization header with the request.
 
 #### Operation and Schemas
 
@@ -115,15 +116,13 @@ This route is _protected_. A valid token retrieved either from `/login` or `/reg
 
 ```js
 {
-    users: [
-        {
-            "id": number,
-            "password": string,
-            "email": string,
-            "providerId": number | null,
-            "createdAt": Date,
-        }
-    ]
+    user: {
+        "id": number,
+        "password": string,
+        "email": string,
+        "providerId": number | null,
+        "createdAt": Date,
+    }
 }
 ```
 
