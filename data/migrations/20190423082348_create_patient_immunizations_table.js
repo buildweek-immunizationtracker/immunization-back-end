@@ -21,7 +21,7 @@ exports.up = function(knex, Promise) {
         .unsigned()
         .references('id')
         .inTable('providers')
-        .onDelete('CASCADE');
+        .onDelete('SET NULL');
     tbl.datetime('createdAt').defaultTo(knex.fn.now());
   });
 };
