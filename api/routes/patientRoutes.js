@@ -2,10 +2,22 @@ const express = require('express');
 const router = express.Router();
 const {
   getUser,
-  getHistory,
   getPatient,
+  getPatients,
   addPatient,
+  updatePatient,
+  deletePatient,
 } = require('../../data/helpers');
+
+router.get('/', async (req, res) => {
+  try {
+    const userId = req.decoded.id;
+    const patients = await getPatients(userId);
+    res.json({ patients });
+  } catch(error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 router.post('/', async (req, res) => {
   try {
@@ -52,8 +64,20 @@ router.put('/:id', async (req, res) => {
     if (firstName) keysToUpdate.firstName = firstName;
     if (lastName) keysToUpdate.lastName = lastName;
     if (birthDate) keysToUpdate.birthDate = birthDate;
-    const [success] = updatePatient(keysToUpdate);
+    const success = await updatePatient(patient.id, keysToUpdate);
     res.json({ success });
+  } catch(error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const patient = req.patient;
+    const numberDeleted = await deletePatient(patient.id);
+    if (!numberDeleted) 
+      return res.status(404).json({ error: 'No patient with that ID found.' });
+    res.json({ numberDeleted });
   } catch(error) {
     res.status(500).json({ error: error.message });
   }

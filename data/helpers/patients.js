@@ -26,8 +26,9 @@ function addPatient(patient){
     .insert(patient);
 }
 
-function updatePatient(changes){
+function updatePatient(id, changes){
   return db('patients')
+    .where({ id })
     .returning(['id', 'firstName', 'lastName', 'birthDate', 'userId', 'createdAt'])
     .update(changes);
 }
