@@ -94,23 +94,26 @@ Invalid credentials
 
 ## Users
 
-### <a name="users-root">`/users`</a>
+### <a name="users-root">`/user`</a>
 
 #### Description
 
+Endpoint representing the `user` resource. See `Operations and Schemas` for more information of each operation.
+
+#### Operations and Schemas
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+**GET**
+
 Returns information about the current logged in user. There is no need to specify `userId`: the user ID is read from the token passed in the Authorization header with the request.
 
-#### Operation and Schemas
 
----
-
-This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request.
-
----
-
-**Operation**: GET
-
-**Output Schema**:
+_Output Schema_:
 
 * 200 OK
 
@@ -119,14 +122,58 @@ This route is _protected_. A valid token retrieved either from `/login` or `/reg
     user: {
         "id": number,
         "password": string,
-        "email": string,
-        "providerId": number | null,
+        "email": string,**6702803862**
+        "providerId"?: number, // q? means it may or may not be there.
         "createdAt": Date,
     }
 }
 ```
 
-### <a name="users-patients">`/users/:id/patients`</a>
+There is no `providerId` if the user is a patient/account managing patients.
+
+**PUT**
+
+_Input Schema_:
+
+```js
+{
+    "username"?: string, // ? means property is optional (doesn't have to be there).
+    "password"?: string,
+    "email"?: string
+}
+```
+
+At least one property must exist in JSON body. Otherwise, the route will respond with `400 Bad Request`.
+
+_Output Schema_:
+
+```js
+{
+    success: {
+        // wWill contain details of the updated user sans password
+        "id": number,
+        "username": string,
+        "email": string,
+        "createdAt": Date
+    }
+}
+```
+
+**DELETE**
+
+_Output Schema_:
+
+```js
+{
+    "usersDeleted": number,
+}
+```
+
+Returns the number of users deleted. This number should always be `1`. If it's more than `1`, contact the backend people. 
+
+If less than `1`, you should get a `404: Not Found` instead, signifying that the user cannot be found. Since the user to be deleted is identified by the token, a `404` may mean that the token is old and can be discarded.
+
+### <a name="users-patients">`/user/:id/patients`</a>
 
 #### Description
 
@@ -136,7 +183,7 @@ Returns a list of all patients associated with the user account (e.g. a list of 
 
 ---
 
-This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request.
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
 
 ---
 
