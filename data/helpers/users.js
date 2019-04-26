@@ -1,35 +1,40 @@
 const db = require('../dbConfig');
 
 module.exports = {
-    getUsers,
-    getUserByUsername,
-    addUser,
-    getPatientsByUser,
-    getPermittedProviders,
+  getUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  getUserByUsername,
+  addUser,
+  getPatientsByUser,
 };
 
+function getUser(id){
+  return db('users').where({ id });
+}
+
 function getUsers() {
-    return db('users');
+  return db('users');
+}
+
+function updateUser(id, changes){
+  return db('users').where({ id }).update(changes);
+}
+
+function deleteUser(id){
+  return db('users').where({ id }).del();
 }
 
 function getUserByUsername(username) {
-    return db('users').where({ username });
+  return db('users').where({ username });
 }
 
 function addUser(user) {
-    return db('users').insert(user);
+  return db('users').insert(user);
 }
 
 function getPatientsByUser(id) {
-    // User ID
-    return db('patients').where({ 'patients.userId': id });
-}
-
-function getPermittedProviders(id) {
-    // User ID
-    return db('users')
-    .where({ 'users.id': id })
-    .join('permissions', { 'users.id': 'permissions.userId' })
-    .join('providers', { 'permissions.providerId': 'providers.id' })
-    .select('providers.name');
+  // User ID
+  return db('patients').where({ 'patients.userId': id });
 }

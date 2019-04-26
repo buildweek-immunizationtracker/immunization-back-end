@@ -6,14 +6,14 @@ exports.up = function(knex, Promise) {
         .notNullable();
     tbl.string('lastName', 255)
         .notNullable();
-    tbl.integer('age')
-        .notNullable()
-        .unsigned();
+    tbl.date('birthDate')
+        .notNullable();
     tbl.integer('userId')
         .notNullable()
         .unsigned()
         .references('id')
-        .inTable('users');
+        .inTable('users')
+        .onDelete('CASCADE');
     tbl.datetime('createdAt').defaultTo(knex.fn.now());
   })
 };

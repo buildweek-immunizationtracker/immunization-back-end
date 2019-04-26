@@ -6,19 +6,22 @@ exports.up = function(knex, Promise) {
         .notNullable()
         .unsigned()
         .references('id')
-        .inTable('patients');
+        .inTable('patients')
+        .onDelete('CASCADE');
     tbl.integer('immunizationId')
         .notNullable()
         .unsigned()
         .references('id')
-        .inTable('immunizations');
+        .inTable('immunizations')
+        .onDelete('CASCADE');
     tbl.datetime('appointmentDate')
         .notNullable();
     tbl.integer('providerId')
         .notNullable()
         .unsigned()
         .references('id')
-        .inTable('providers');
+        .inTable('providers')
+        .onDelete('CASCADE');
     tbl.datetime('createdAt').defaultTo(knex.fn.now());
   });
 };
