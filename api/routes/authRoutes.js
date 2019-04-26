@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
     const hash = bcrypt.hashSync(credentials.password, 10);
     credentials.password = hash;
     credentials.providerId = providerId || null;
-    const [id] = await addUser(credentials);
+    const id = await addUser(credentials);
     if (!id) throw new Error();
     const token = jwt.sign({ id }, jwtSecret, { expiresIn: '1d' });
     const isProvider = Boolean(credentials.providerId); // providerId will only ever be above 0 - true if exists, false if is null
