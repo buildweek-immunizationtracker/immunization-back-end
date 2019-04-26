@@ -1,11 +1,11 @@
 // Update with your config settings.
-
+require('dotenv').config();
 module.exports = {
   development: {
-    client: 'sqlite3',
-    connection: {
-      filename: './data/dev.sqlite3',
-    },
+    client: 'pg',
+    connection: `postgres://${process.env.DB_USERNAME}:${
+      process.env.DB_PASSWORD
+    }@localhost/immunizations`,
     migrations: {
       directory: './data/migrations',
     },
@@ -13,18 +13,13 @@ module.exports = {
       directory: './data/seeds/dev',
     },
     useNullAsDefault: true,
-    pool: {
-      afterCreate: (conn, cb) => {
-        conn.run('PRAGMA foreign_keys = ON', cb);
-      },
-    },
   },
 
   testing: {
-    client: 'sqlite3',
-    connection: {
-      filename: './data/testing.sqlite3',
-    },
+    client: 'pg',
+    connection: `postgres://${process.env.DB_USERNAME}:${
+      process.env.DB_PASSWORD
+    }@localhost/immunizations_test`,
     migrations: {
       directory: './data/migrations',
     },
@@ -32,11 +27,6 @@ module.exports = {
       directory: './data/seeds/testing',
     },
     useNullAsDefault: true,
-    pool: {
-      afterCreate: (conn, cb) => {
-        conn.run('PRAGMA foreign_keys = ON', cb);
-      },
-    },
   },
 
   staging: {
@@ -53,6 +43,7 @@ module.exports = {
     seeds: {
       directory: './data/seeds/staging',
     },
+    useNullAsDefault: true,
   },
 
   production: {
@@ -69,5 +60,6 @@ module.exports = {
     seeds: {
       directory: './data/seeds/production',
     },
+    useNullAsDefault: true,
   },
 };
