@@ -1,35 +1,56 @@
 const db = require('../dbConfig');
 
 module.exports = {
-    getUsers,
-    getUserByUsername,
-    addUser,
-    getPatientsByUser,
-    getPermittedProviders,
+  addUser,
+  getUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  getUserByUsername,
+  getPatientsByUser,
 };
 
-function getUsers() {
-    return db('users');
-}
-
-function getUserByUsername(username) {
-    return db('users').where({ username });
-}
+// All functions in this file should use parameters based on the `users` table, such as `users.id` and `users.username`
+// Any functions making use of data from the `patients` table should go in `patients.js`
 
 function addUser(user) {
-    return db('users').insert(user);
+  return db('users')
+    .returning('id')
+    .insert(user);
+}
+
+async function getUser(id) {
+  try {
+    const [user] = await db('users').where({ id });
+    if (!user) throw new Error('No user found by that ID.');
+    const patients = await getPatientsByUser(id);
+    return Promise.resolve({ ...user, patients });
+  } catch(error) {
+    return Promise.reject(error);
+  }
+}
+
+function getUsers() { // Should never be used outside of development - HIPAA
+  return db('users');
+}
+
+function updateUser(id, changes) {
+  return db('users')
+    .where({ id })
+    .returning(['id', 'username', 'email', 'providerId', 'createdAt'])
+    .update(changes);
+}
+
+function deleteUser(id) {
+  return db('users')
+    .where({ id })
+    .del();
+}
+
+function getUserByUsername(username) { // Primarily for testing purposes
+  return db('users').where({ username });
 }
 
 function getPatientsByUser(id) {
-    // User ID
-    return db('patients').where({ 'patients.userId': id });
-}
-
-function getPermittedProviders(id) {
-    // User ID
-    return db('users')
-    .where({ 'users.id': id })
-    .join('permissions', { 'users.id': 'permissions.userId' })
-    .join('providers', { 'permissions.providerId': 'providers.id' })
-    .select('providers.name');
+  return db('patients').where({ 'patients.userId': id });
 }

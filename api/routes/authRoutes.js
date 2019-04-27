@@ -16,7 +16,8 @@ router.post('/login', async (req, res) => {
     if (!user || !bcrypt.compareSync(password, user.password))
       throw new Error();
     const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: '1d' });
-    return res.json({ token });
+    const isProvider = Boolean(user.providerId); // providerId will only ever be above 0 - true if exists, false if is null
+    return res.json({ token, isProvider });
   } catch (error) {
     res.status(401).json({ error: 'Invalid credentials' });
   }
@@ -37,14 +38,15 @@ router.post('/register', async (req, res) => {
     const [id] = await addUser(credentials);
     if (!id) throw new Error();
     const token = jwt.sign({ id }, jwtSecret, { expiresIn: '1d' });
-    return res.status(201).json({ token });
+    const isProvider = Boolean(credentials.providerId); // providerId will only ever be above 0 - true if exists, false if is null
+    return res.status(201).json({ token, isProvider });
   } catch (error) {
     if (error.message.includes('UNIQUE constraint')) {
       return res
         .status(400)
         .json({ error: 'Email or username already exists.' });
     }
-    res.status(401).json({ error: 'Invalid credentials' });
+    res.status(401).json({ error: error.message });
   }
 });
 

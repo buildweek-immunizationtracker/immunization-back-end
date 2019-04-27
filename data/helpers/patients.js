@@ -1,23 +1,47 @@
 const db = require('../dbConfig');
 
 module.exports = {
-    getPatient,
-    getHistory,
+  getPatients,
+  getPatient,
+  addPatient,
+  updatePatient,
+  deletePatient,
+  getPermittedProviders,
 };
 
-function getPatient(id) {
-    // Patient ID
-    return db('patients').where({ id });
+// All functions in this file should use parameters based on the `patients` table, such as `patients.id` and `patients.birthDate`
+// Any functions making use of data from the `users` table should go in `users.js`
+
+function getPatients(userId){
+  return db('patients').where({ userId });
 }
 
-function getHistory(id) {
-    // Patient ID
-    return db('patients')
+async function getPatient(id) {
+  return db('patients').where({ id });
+}
+
+function addPatient(patient){
+  return db('patients')
+    .returning(['id', 'firstName', 'lastName', 'birthDate', 'userId', 'createdAt'])
+    .insert(patient);
+}
+
+function updatePatient(changes){
+  return db('patients')
+    .returning(['id', 'firstName', 'lastName', 'birthDate', 'userId', 'createdAt'])
+    .update(changes);
+}
+
+function deletePatient(id){
+  return db('patients')
+    .where({ id })
+    .del();
+}
+
+function getPermittedProviders(id) {
+  return db('patients')
     .where({ 'patients.id': id })
-    .join('patient_immunizations as PI', { 'patients.id': 'PI.patientId' })
-    .join('immunizations', { 'immunizations.id': 'PI.immunizationId' })
-    .select(
-    'immunizations.name as immunization_name',
-    'PI.appointmentDate as appointment_date'
-    );
+    .join('permissions', { 'patients.id': 'permissions.patientId' })
+    .join('providers', { 'permissions.providerId': 'providers.id' })
+    .select('providers.id');
 }

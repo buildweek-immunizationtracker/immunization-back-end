@@ -1,10 +1,14 @@
 // Update with your config settings.
-
+require('dotenv').config();
 module.exports = {
   development: {
+    // client: 'pg',
+    // connection: `postgres://${process.env.DB_USERNAME}:${
+    //   process.env.DB_PASSWORD
+    // }@localhost/immunizations`,
     client: 'sqlite3',
     connection: {
-      filename: './data/dev.sqlite3',
+      filename: './data/dev.sqlite3'
     },
     migrations: {
       directory: './data/migrations',
@@ -12,18 +16,22 @@ module.exports = {
     seeds: {
       directory: './data/seeds/dev',
     },
-    useNullAsDefault: true,
     pool: {
       afterCreate: (conn, cb) => {
         conn.run('PRAGMA foreign_keys = ON', cb);
       },
     },
+    useNullAsDefault: true,
   },
 
   testing: {
+    // client: 'pg',
+    // connection: `postgres://${process.env.DB_USERNAME}:${
+    //   process.env.DB_PASSWORD
+    // }@localhost/immunizations_test`,
     client: 'sqlite3',
     connection: {
-      filename: './data/testing.sqlite3',
+      filename: './data/testing.sqlite3'
     },
     migrations: {
       directory: './data/migrations',
@@ -31,43 +39,45 @@ module.exports = {
     seeds: {
       directory: './data/seeds/testing',
     },
-    useNullAsDefault: true,
     pool: {
       afterCreate: (conn, cb) => {
         conn.run('PRAGMA foreign_keys = ON', cb);
       },
     },
+    useNullAsDefault: true,
   },
 
   staging: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password',
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
       max: 10,
     },
     migrations: {
+      directory: './data/migrations',
       tableName: 'knex_migrations',
     },
+    seeds: {
+      directory: './data/seeds/staging',
+    },
+    useNullAsDefault: true,
   },
 
   production: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password',
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
       max: 10,
     },
     migrations: {
+      directory: './data/migrations',
       tableName: 'knex_migrations',
     },
+    seeds: {
+      directory: './data/seeds/production',
+    },
+    useNullAsDefault: true,
   },
 };
