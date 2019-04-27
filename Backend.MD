@@ -14,7 +14,9 @@
   - [`/user/:id/patients`](#user-patients)
 
 - Patient Routes
-  -
+  - [`/patients`](#patient-root)
+  - [`/patients/:id/history`](#patient-history)
+  - [`/patients/:id/permissions`](#patient-permissions)
 
 ## Authentication
 
