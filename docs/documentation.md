@@ -14,6 +14,8 @@
 
 - Patient Routes
   - [`/patients`](#patient-root)
+    - [GET](#patient-get)
+    - [POST](#patient-post)
   - [`/patients/:id`](#patient-id)
   - [`/patients/:id/consent`](#patient-consent-root)
     - [GET](#patient-consent-get)
@@ -225,7 +227,7 @@ This route is _protected_. A valid token retrieved either from `/login` or `/reg
 
 #### Operation and Schemas
 
-**GET**
+<a name="patient-get">**GET**</a>
 
 _Output Schema_:
 
@@ -241,7 +243,7 @@ _Output Schema_:
 
 ---
 
-**POST**
+<a name="patient-post">**POST**</a>
 
 _Input Schema_:
 
@@ -308,7 +310,7 @@ _Output Schema_:
 }
 ```
 
-### <a name="patient-consent">`/patients/:id/consent`</a>
+### <a name="patient-consent-root">`/patients/:id/consent`</a>
 
 #### Description
 
@@ -322,7 +324,7 @@ This route is _protected_. A valid token retrieved either from `/login` or `/reg
 
 #### Operations and Schemas
 
-**GET**
+<a name="patient-consent-get">**GET**</a>
 
 _Output Schema_:
 
@@ -337,7 +339,7 @@ _Output Schema_:
 
 ---
 
-**POST**
+<a name="patient-consent-post">**POST**</a>
 
 _Input Schema_:
 
@@ -365,7 +367,7 @@ _Output Schema_:
 
 ---
 
-**DELETE**
+<a name="patient-consent-delete">**DELETE**</a>
 
 _Input Schema_:
 
@@ -387,7 +389,7 @@ _Output Schema_:
 
 [Back to top](#toc)
 
-### <a name="patient-immunzations-root">`/patients/:id/immunizations`</a>
+### <a name="patient-immunizations-root">`/patients/:id/immunizations`</a>
 
 #### Description
 
@@ -401,7 +403,7 @@ This route is _protected_. A valid token retrieved either from `/login` or `/reg
 
 #### Operations and Schemas
 
-**GET**
+<a name="patient-immunizations-get">**GET**</a>
 
 _Output Schema_:
 
@@ -417,7 +419,7 @@ _Output Schema_:
 
 ---
 
-**POST**
+<a name="patient-immunizations-post">**POST**</a>
 
 _Input Schema_:
 
