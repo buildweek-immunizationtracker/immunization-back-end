@@ -1,4 +1,4 @@
-# Routes
+# <a name="toc">Routes</a>
 
 - Authentication Routes
 
@@ -17,6 +17,7 @@
   - [`/patients`](#patient-root)
   - [`/patients/:id/history`](#patient-history)
   - [`/patients/:id/permissions`](#patient-permissions)
+
 
 ## Authentication
 
@@ -58,6 +59,10 @@ Request is missing either or both username and password.
 - 401 Unauthorized
 
 Credentials invalid.
+
+[Back to top](#toc)
+
+---
 
 ### <a name="register">`/register`</a>
 
@@ -105,6 +110,8 @@ Check error message:
 
 Invalid credentials
 
+[Back to top](#toc)
+
 ## Users
 
 ### <a name="user-root">`/user`</a>
@@ -143,6 +150,8 @@ _Output Schema_:
 
 There is no `providerId` if the user is a patient/an account managing patients.
 
+[Back to top](#toc)
+
 <a name="user-put">**PUT**</a>
 
 _Input Schema_:
@@ -173,6 +182,8 @@ _Output Schema_:
 }
 ```
 
+[Back to top](#toc)
+
 <a name="user-delete">**DELETE**</a>
 
 _Output Schema_:
@@ -188,6 +199,10 @@ _Output Schema_:
 Returns the number of users deleted. This number should always be `1`. If it's more than `1`, contact the backend people.
 
 If less than `1`, you should get a `404: Not Found` instead, signifying that the user cannot be found. Since the user to be deleted is identified by the token, a `404` may mean that the token is old and can be discarded.
+
+[Back to top](#toc)
+
+---
 
 ### <a name="user-patients">`/user/:id/patients`</a>
 
@@ -223,6 +238,8 @@ _Output Schema_:
     ]
 }
 ```
+
+[Back to top](#toc)
 
 ## Patients
 
@@ -271,6 +288,10 @@ _Output Schema_:
     }
 }
 ```
+
+[Back to top](#toc)
+
+---
 
 ### <a name="patient-history">`/patients/:id/history`</a>
 
@@ -326,3 +347,4 @@ _Output Schema_:
 }
 ```
 
+[Back to top](#toc)
