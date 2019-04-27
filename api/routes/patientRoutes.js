@@ -8,6 +8,7 @@ const {
   updatePatient,
   deletePatient,
   getPatientsForProvider,
+  getPermittedProviders,
   giveConsentToProvider,
   removeConsentFromProvider,
   getImmunizationRecords,
@@ -40,6 +41,11 @@ router.post('/', async (req, res) => {
     const user = await getUser(userId);
     if (!user)
       return res.status(404).json({ error: 'No user found with that ID.' });
+    if (user.providerId)
+      return res.status(403).json({
+        error:
+          'Patients cannot be directly associated with a provider account.',
+      });
     const newPatient = {
       firstName,
       lastName,
@@ -85,6 +91,19 @@ router.delete('/:id', async (req, res) => {
     if (!numberDeleted)
       return res.status(404).json({ error: 'No patient with that ID found.' });
     res.json({ numberDeleted });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/:id/consent', async (req, res) => {
+  try {
+    const id = req.decoded.id;
+    const patient = req.patient;
+    if (id !== patient.userId)
+      return res.status(403).json({ error: 'Unauthorized' });
+    const providers = await getPermittedProviders(patient.id);
+    res.json({ providers });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -141,10 +160,15 @@ router.get('/:id/immunizations', async (req, res) => {
 
 router.post('/:id/immunizations', async (req, res) => {
   try {
-    const { id } = req.params;
-    const { immunizationId, providerId, appointmentDate } = req.body;
+    const patientId = req.params.id;
+    const providerId = req.providerId;
+    if (!providerId)
+      return res
+        .status(403)
+        .json({ error: 'Immunziation records must be added by provider.' });
+    const { immunizationId, appointmentDate } = req.body;
     const [success] = await recordImmunization({
-      patientId: id,
+      patientId,
       immunizationId,
       appointmentDate,
       providerId,
@@ -154,9 +178,13 @@ router.post('/:id/immunizations', async (req, res) => {
     if (error.message.includes('violates foreign key constraint')) {
       const type = error.message.match(/(?<=_)[a-zA-Z]+(?=_foreign"$)/)[0];
       return res
-        .status(400)
+        .status(404)
         .json({ error: `No entry found in database with matching ${type}.` });
     }
+    if (error.message.includes('UNIQUE constraint'))
+      return res
+        .status(400)
+        .json({ error: 'This record has already been added.' });
     res.status(500).json({ error: error.message });
   }
 });

@@ -17,6 +17,7 @@ async function checkConsent(req, res, next) {
     permittedProviders.map(provider => provider.id).includes(user.providerId)
   ) {
     req.patient = patient;
+    if (user.providerId) req.providerId = user.providerId;
     return next();
   } else res.status(403).json({ error: 'Unauthorized' });
 }

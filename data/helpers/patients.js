@@ -59,7 +59,7 @@ function getPermittedProviders(id) {
     .where({ 'patients.id': id })
     .join('permissions', { 'patients.id': 'permissions.patientId' })
     .join('providers', { 'permissions.providerId': 'providers.id' })
-    .select('providers.id');
+    .select('providers.id', 'providers.name');
 }
 
 function getPatientsForProvider(providerId) {
