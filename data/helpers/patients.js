@@ -13,28 +13,42 @@ module.exports = {
 // All functions in this file should use parameters based on the `patients` table, such as `patients.id` and `patients.birthDate`
 // Any functions making use of data from the `users` table should go in `users.js`
 
-function getPatients(userId){
+function getPatients(userId) {
   return db('patients').where({ userId });
 }
 
-async function getPatient(id) {
+function getPatient(id) {
   return db('patients').where({ id });
 }
 
-function addPatient(patient){
+function addPatient(patient) {
   return db('patients')
-    .returning(['id', 'firstName', 'lastName', 'birthDate', 'userId', 'createdAt'])
+    .returning([
+      'id',
+      'firstName',
+      'lastName',
+      'birthDate',
+      'userId',
+      'createdAt',
+    ])
     .insert(patient);
 }
 
-function updatePatient(id, changes){
+function updatePatient(id, changes) {
   return db('patients')
     .where({ id })
-    .returning(['id', 'firstName', 'lastName', 'birthDate', 'userId', 'createdAt'])
+    .returning([
+      'id',
+      'firstName',
+      'lastName',
+      'birthDate',
+      'userId',
+      'createdAt',
+    ])
     .update(changes);
 }
 
-function deletePatient(id){
+function deletePatient(id) {
   return db('patients')
     .where({ id })
     .del();
@@ -48,7 +62,7 @@ function getPermittedProviders(id) {
     .select('providers.id');
 }
 
-function getPatientsForProvider(providerId){
+function getPatientsForProvider(providerId) {
   return db('permissions')
     .where({ providerId })
     .join('patients', { 'patients.id': 'permissions.patientId' })
@@ -58,5 +72,5 @@ function getPatientsForProvider(providerId){
       'patients.lastName',
       'patients.birthDate',
       'patients.createdAt'
-      );
+    );
 }
