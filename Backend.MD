@@ -248,9 +248,11 @@ _Input Schema_:
 {
     "firstName": string,
     "lastName": string,
-    "birthDate": Date // double check this, Ronald
+    "birthDate": string // in this string format: `YYYY-MM-DD`
 }
 ```
+
+If you are handling date objects with either `moment.js` or natively, look into methods that can generate a string representation of the desired format.
 
 _Output Schema_:
 
