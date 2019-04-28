@@ -48,7 +48,7 @@ router.put('/', async (req, res) => {
 
 router.delete('/', async (req, res) => {
   try {
-    const [id] = req.decoded.id;
+    const id = req.decoded.id;
     const usersDeleted = await deleteUser(id);
     if (!usersDeleted)
       return res.status(404).json({

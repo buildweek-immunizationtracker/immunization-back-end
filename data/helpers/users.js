@@ -1,4 +1,5 @@
 const db = require('../dbConfig');
+const { getPatientsForProvider } = require('./patients');
 
 module.exports = {
   addUser,
@@ -23,7 +24,9 @@ async function getUser(id) {
   try {
     const [user] = await db('users').where({ id });
     if (!user) throw new Error('No user found by that ID.');
-    const patients = await getPatientsByUser(id);
+    const patients = user.providerId 
+      ? await getPatientsForProvider(user.providerId)
+      : await getPatientsByUser(id);
     return Promise.resolve({ ...user, patients });
   } catch(error) {
     return Promise.reject(error);
