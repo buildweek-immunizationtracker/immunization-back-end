@@ -1,12 +1,12 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('users', tbl => {
-    if (knex.client.config.client === 'sqlite3') {
-      tbl.increments();
-    } else {
+    if (knex.client.config.client === 'pg') {
       tbl
         .uuid('id')
         .primary()
         .defaultTo(knex.raw('uuid_generate_v4()'));
+    } else {
+      tbl.increments();
     }
     tbl
       .string('username', 255)
@@ -20,17 +20,17 @@ exports.up = function(knex, Promise) {
       .string('email', 255)
       .notNullable()
       .unique();
-    if (knex.client.config.client === 'sqlite3') {
+    if (knex.client.config.client === 'pg') {
       tbl
-        .integer('providerId')
-        .unsigned()
+        .uuid('providerId')
         .defaultTo(null)
         .references('id')
         .inTable('providers')
         .onDelete('CASCADE');
     } else {
       tbl
-        .uuid('providerId')
+        .integer('providerId')
+        .unsigned()
         .defaultTo(null)
         .references('id')
         .inTable('providers')

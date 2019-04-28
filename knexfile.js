@@ -8,7 +8,7 @@ module.exports = {
     }@localhost/immunizations`,
     // client: 'sqlite3',
     // connection: {
-    //   filename: './data/dev.sqlite3'
+    //   filename: './data/dev.sqlite3',
     // },
     migrations: {
       directory: './data/migrations',
@@ -31,7 +31,7 @@ module.exports = {
     }@localhost/immunizations_test`,
     // client: 'sqlite3',
     // connection: {
-    //   filename: './data/testing.sqlite3'
+    //   filename: './data/testing.sqlite3',
     // },
     migrations: {
       directory: './data/migrations',
