@@ -1,11 +1,12 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('providers', tbl => {
-    if(knex.client.config.client === 'sqlite3') {
+    if (knex.client.config.client === 'sqlite3') {
       tbl.increments();
     } else {
-      tbl.uuid('id')
+      tbl
+        .uuid('id')
         .primary()
-        .defaultTo(knex.raw('uuid_generate_v4()'))
+        .defaultTo(knex.raw('uuid_generate_v4()'));
     }
     tbl
       .string('name', 255)
