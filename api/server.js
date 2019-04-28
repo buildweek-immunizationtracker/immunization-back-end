@@ -3,19 +3,19 @@ const server = express();
 const cors = require('cors');
 const helmet = require('helmet');
 
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const patientRoutes = require('./routes/patientRoutes');
+const routes = require('./routes');
 const checkConsent = require('./middleware/checkConsent');
 const authenticate = require('./middleware/authenticate');
 
 server.use(express.json());
 server.use(cors());
 server.use(helmet());
-server.use('/', authRoutes);
+server.use('/', routes.authRoutes);
 server.use(authenticate);
+server.use('/user', routes.userRoutes);
+server.use('/providers', routes.providerRoutes);
+server.use('/immunizations', routes.immunizationRoutes);
 server.use('/patients/:id', checkConsent);
-server.use('/user', userRoutes);
-server.use('/patients', patientRoutes);
+server.use('/patients', routes.patientRoutes);
 
 module.exports = server;

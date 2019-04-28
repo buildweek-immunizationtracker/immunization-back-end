@@ -1,7 +1,13 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('patients', tbl => {
-      tbl.increments();
+    if(knex.client.config.client === 'sqlite3') {
+        tbl.increments();
+      } else {
+        tbl.uuid('id')
+          .primary()
+          .defaultTo(knex.raw('uuid_generate_v4()'))
+      }
       tbl.string('firstName', 255)
         .notNullable();
     tbl.string('lastName', 255)
