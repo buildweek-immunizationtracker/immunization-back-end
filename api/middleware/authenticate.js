@@ -12,7 +12,7 @@ function authenticate(req, res, next) {
       if (!user)
         throw new Error('Token not associated with a valid user, please reauthenticate.');
       req.decoded = decoded;
-      return next();
+      return next(); 
     }
     res
       .status(401)
