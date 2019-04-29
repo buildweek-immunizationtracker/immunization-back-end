@@ -4,7 +4,10 @@ const jwtSecret =
 
 const port = process.env.PORT || 5000;
 
+const seedPW = process.env.SEED_PW || 'password';
+
 module.exports = {
   jwtSecret,
   port,
+  seedPW,
 };
