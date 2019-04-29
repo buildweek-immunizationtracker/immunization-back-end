@@ -1,6 +1,13 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('providers', tbl => {
-    tbl.increments();
+    if (knex.client.config.client === 'pg') {
+      tbl
+        .uuid('id')
+        .primary()
+        .defaultTo(knex.raw('uuid_generate_v4()'));
+    } else {
+      tbl.increments();
+    }
     tbl
       .string('name', 255)
       .notNullable()
