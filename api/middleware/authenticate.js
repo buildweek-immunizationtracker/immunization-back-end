@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../../config/secrets');
+const { getUser } = require('../../data/helpers');
 
 function authenticate(req, res, next) {
   try {
@@ -7,6 +8,9 @@ function authenticate(req, res, next) {
     if (header) {
       const token = header.split(' ')[1];
       const decoded = jwt.verify(token, jwtSecret); // Will throw error if not successful
+      const user = await getUser(decoded.id);
+      if (!user)
+        throw new Error('Token not associated with a valid user, please reauthenticate.');
       req.decoded = decoded;
       return next();
     }
