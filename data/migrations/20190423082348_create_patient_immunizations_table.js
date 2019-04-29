@@ -14,7 +14,7 @@ exports.up = function(knex, Promise) {
         .references('id')
         .inTable('immunizations')
         .onDelete('CASCADE');
-      tbl.datetime('appointmentDate').notNullable();
+      tbl.date('appointmentDate').notNullable();
       tbl
         .uuid('providerId')
         .notNullable()
