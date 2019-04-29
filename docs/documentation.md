@@ -29,6 +29,7 @@
 - Provider Routes
   - [`/providers`](#providers-root)
     - [GET](#providers-get)
+    - [PUT](#providers-put)
 - Immunization Routes
   - [`/immunizations`](#immunizations-root)
     - [GET](#immunizations-get)
@@ -478,6 +479,34 @@ _Output Schema_:
 ```js
 {
     "providers": array
+}
+```
+
+[Back to top](#toc)
+
+---
+
+<a name="providers-put">**PUT**</a>
+
+_Input Schema_:
+
+```js
+{
+    "name": string
+}
+```
+
+_Output Schema_:
+
+- 200 OK
+
+```js
+{
+    "success": {
+        "id": number,
+        "name": string,
+        "createdAt": DateString
+    }
 }
 ```
 
