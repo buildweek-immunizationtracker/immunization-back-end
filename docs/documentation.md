@@ -13,6 +13,7 @@
     - [DELETE](#user-delete)
 
 - Patient Routes
+
   - [`/patients`](#patient-root)
     - [GET](#patient-get)
     - [POST](#patient-post)
@@ -24,6 +25,13 @@
   - [`/patients/:id/immunizations`](#patient-immunizations-root)
     - [GET](#patient-immunizations-get)
     - [POST](#patient-immunizations-post)
+
+- Provider Routes
+  - [`/providers`](#providers-root)
+    - [GET](#providers-get)
+- Immunization Routes
+  - [`/immunizations`](#immunizations-root)
+    - [GET](#immunizations-get)
 
 ## Authentication
 
@@ -442,6 +450,62 @@ _Output Schema_:
         "appointmentDate": DateString,
         "providerId": number
     }
+}
+```
+
+[Back to top](#toc)
+
+### <a name="providers-root">`/providers`</a>
+
+#### Description
+
+Endpoint that handles queries related directly to information on the providers themselves. This endpoint only has one operation, GET, which will allow the user to view a list of all providers, including id, name, and when the provider entry was created.
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+#### Operations and Schemas
+
+<a name="providers-get">**GET**</a>
+
+_Output Schema_:
+
+- 200 OK
+
+```js
+{
+    "providers": array
+}
+```
+
+[Back to top](#toc)
+
+### <a name="immunizations-root">`/immunizations`</a>
+
+#### Description
+
+Endpoint that handles queries related to immunization information that is not related to any particular patient. This includes the id and name of the immunization in question. This endpoint has only one operation, GET, which can be used to retrieve a list of all immunizations.
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+#### Operations and Schemas
+
+<a name="immunizations-get">**GET**</a>
+
+_Output Schema_:
+
+- 200 OK
+
+```js
+{
+    "immunizations": array
 }
 ```
 
