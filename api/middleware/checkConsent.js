@@ -22,9 +22,9 @@ async function checkConsent(req, res, next) {
   } else throw new Error(403);
   } catch(error) {
     switch(error.message) {
-      case 404:
+      case '404':
         return res.status(404).json({ error: 'No patient by that ID found.' });
-      case 403:
+      case '403':
         return res.status(403).json({ error: 'Unauthorized' });
       default:
         return res.status(500).json({ error: error.message });

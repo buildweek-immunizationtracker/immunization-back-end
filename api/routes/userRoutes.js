@@ -24,13 +24,14 @@ router.put('/', async (req, res) => {
   try {
     const id = req.decoded.id;
     const { username, password, email } = req.body;
-    if (!username && !password && !email) throw new Error(400);
     const keysToUpdate = { 
       username, 
       password: password ? bcrypt.hashSync(password, 10) : undefined, 
-      email };
+      email 
+    };
     for (let key in keysToUpdate) 
       if (!keysToUpdate[key]) delete keysToUpdate[key];
+    if (!Object.keys(keysToUpdate).length) throw new Error(400);
     const numberOfUpdated = await updateUser(id, keysToUpdate);
     if (!numberOfUpdated) throw new Error(404);
     const success = await getUser(id);
@@ -39,9 +40,9 @@ router.put('/', async (req, res) => {
     res.status(200).json({ success });
   } catch (error) {
     switch(error.message) {
-      case 400:
+      case '400':
         return res.status(400).json({ error: 'Please provide key to update on user.' });
-      case 404:
+      case '404':
         return res.status(404).json({ error: 'No user with that ID found.  Please reauthenticate and try again.' });
       default:
         res.status(500).json({ error: error.message });
@@ -60,7 +61,7 @@ router.delete('/', async (req, res) => {
     res.json({ usersDeleted });
   } catch (error) {
     switch(error.message) {
-      case 404:
+      case '404':
         return res.status(404).json({ error: 'No user by that ID found.  Please reauthenticate and try again.' });
       default:
         res.status(500).json({ error: error.message });

@@ -15,7 +15,7 @@ router.post('/login', async (req, res) => {
     const isProvider = Boolean(user.providerId); // if providerId exists, it will convert to true
     res.json({ token, isProvider });
   } catch (error) {
-    if (error.message === 400)
+    if (error.message === '400')
       return res.status(400).json({ error: 'Request must include values for username and password.' });
     else res.status(401).json({ error: 'Invalid credentials' });
   }
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
   } catch (error) {
     if (error.message.includes('UNIQUE constraint'))
       return res.status(400).json({ error: 'Username and/or email already associated with an account.' });
-    else if (error.message === 400)
+    else if (error.message === '400')
       return res.status(400).json({ error: 'Request must include values for username, password, and email keys.' })
     else res.status(500).json({ error: error.message })
   }
