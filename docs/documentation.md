@@ -13,6 +13,7 @@
     - [DELETE](#user-delete)
 
 - Patient Routes
+
   - [`/patients`](#patient-root)
     - [GET](#patient-get)
     - [POST](#patient-post)
@@ -24,6 +25,16 @@
   - [`/patients/:id/immunizations`](#patient-immunizations-root)
     - [GET](#patient-immunizations-get)
     - [POST](#patient-immunizations-post)
+
+- Provider Routes
+  - [`/providers`](#providers-root)
+    - [GET](#providers-get)
+  - [`/provders/:id`](#providers-id-root)
+    - [GET](#providers-id-get)
+    - [PUT](#providers-id-put)
+- Immunization Routes
+  - [`/immunizations`](#immunizations-root)
+    - [GET](#immunizations-get)
 
 ## Authentication
 
@@ -442,6 +453,122 @@ _Output Schema_:
         "appointmentDate": DateString,
         "providerId": number
     }
+}
+```
+
+[Back to top](#toc)
+
+### <a name="providers-root">`/providers`</a>
+
+#### Description
+
+Endpoint that handles queries related directly to information on the providers themselves. This endpoint only has one operation, GET, which will allow the user to view a list of all providers, including id, name, and when the provider entry was created.
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+#### Operations and Schemas
+
+<a name="providers-get">**GET**</a>
+
+_Output Schema_:
+
+- 200 OK
+
+```js
+{
+    "providers": array
+}
+```
+
+[Back to top](#toc)
+
+### <a name="providers-id-root">`/providers/:id`</a>
+
+#### Description
+
+Endpoint that handles queries directly pertaining to a specific provider. There are two operations handled by this endpoint, GET and PUT. The GET operation is available to any authenticated user, and will return the indicated provider's information. The POST operation cannot be used by an account that is not associated with the provider, and is used to update the provider's information. Note there is no DELETE operation at this endpoint - deletion of a provider should be handled through the `/user` endpoint, as the deletion of any user account associated with a provider will also trigger deletion of the provider entry.
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+#### Operations and Schemas
+
+<a name="providers-id-get">**GET**</a>
+
+_Output Schema_:
+
+- 200 OK
+
+```js
+{
+    "provider": {
+        "id": number,
+        "name": string,
+        "createdAt": DateString
+    }
+}
+```
+
+[Back to top](#toc)
+
+---
+
+<a name="providers-id-put">**PUT**</a>
+
+_Input Schema_:
+
+```js
+{
+    "name": string
+}
+```
+
+_Output Schema_:
+
+- 200 OK
+
+```js
+{
+    "success": {
+        "id": number,
+        "name": string,
+        "createdAt": DateString
+    }
+}
+```
+
+[Back to top](#toc)
+
+### <a name="immunizations-root">`/immunizations`</a>
+
+#### Description
+
+Endpoint that handles queries related to immunization information that is not related to any particular patient. This includes the id and name of the immunization in question. This endpoint has only one operation, GET, which can be used to retrieve a list of all immunizations.
+
+---
+
+This route is _protected_. A valid token retrieved either from `/login` or `/registration` is needed. Please check this [Stack Overflow Answer](https://stackoverflow.com/a/42879201) on information on how to pass this token along with the request with Axios.
+
+---
+
+#### Operations and Schemas
+
+<a name="immunizations-get">**GET**</a>
+
+_Output Schema_:
+
+- 200 OK
+
+```js
+{
+    "immunizations": array
 }
 ```
 

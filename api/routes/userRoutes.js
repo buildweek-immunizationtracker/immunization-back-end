@@ -5,6 +5,7 @@ const {
   getUser,
   updateUser,
   deleteUser,
+  deleteProvider,
 } = require('../../data/helpers');
 
 router.get('/', async (req, res) => {
@@ -49,7 +50,10 @@ router.put('/', async (req, res) => {
 router.delete('/', async (req, res) => {
   try {
     const id = req.decoded.id;
-    const usersDeleted = await deleteUser(id);
+    const user = await getUser(id);
+    let usersDeleted; // If the user is a provider, deleting the entry in the providers table will cause a cascade that will delete the user account
+    if (user.providerId) usersDeleted = await deleteProvider(user.providerId);
+    else usersDeleted = await deleteUser(id);
     if (!usersDeleted)
       return res.status(404).json({
         error:
