@@ -22,10 +22,11 @@ const testUser = {
       .set('Content-Type', 'application/json');
     token = `Bearer ${response.body.token}`;
   });
-  afterAll(async () => {
+  afterAll(async done => {
     await db('users')
       .where({ username: testUser.username })
       .del();
+    done();
   });
 
   describe('POST /patients', () => {

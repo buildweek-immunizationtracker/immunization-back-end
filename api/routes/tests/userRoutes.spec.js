@@ -17,8 +17,9 @@ beforeAll(async () => {
   token = `Bearer ${response.body.token}`;
 });
 
-afterAll(async () => {
+afterAll(async done => {
   await db('users').where({ email: testUser.email }).del();
+  done();
 })
 
 describe('GET /user', () => {

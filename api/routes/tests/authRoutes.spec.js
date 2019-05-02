@@ -22,6 +22,8 @@ const testUser = {
   email: 'TestEmail@email.com',
 };
 
+afterAll(done => done());
+
 describe('/POST /register', () => {
   afterEach(async () => {
     await db('users')
