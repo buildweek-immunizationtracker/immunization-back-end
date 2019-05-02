@@ -15,6 +15,10 @@ const db = require('../../../data/dbConfig');
       .set('Content-Type', 'application/json');
     token = `Bearer ${response.body.token}`;
   });
+  afterAll(async done => {
+    console.log('RUNNING PATIENTS DONE')
+    done();
+  });
   describe('POST /patients', () => {
     it('Should return appropriate response',  async () => {
       const response = await request(server)
