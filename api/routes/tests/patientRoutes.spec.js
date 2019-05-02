@@ -26,10 +26,14 @@ const db = require('../../../data/dbConfig');
   describe('POST /patients', () => {
     it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
       const { lastName, ...incorrectPatient } = testPatient;
+      try {
       const response = await request(server)
         .post('/patients')
         .send(incorrectPatient)
         .set('Authorization', token);
       expect(response.status).toBe(400);
+      } catch(error){
+        throw new Error();
+      }
     });
 });
