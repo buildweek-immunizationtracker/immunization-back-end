@@ -6,8 +6,8 @@
   "scripts": {
     "server": "nodemon index.js",
     "start": "node index.js",
-    "test": "cross-env DB_ENV=testing_travis jest --verbose --runInBand --detectOpenHandles",
-    "test-local": "cross-env DB_ENV=testing jest --verbose --runInBand"
+    "test": "cross-env DB_ENV=testing_travis jest --verbose --detectOpenHandles",
+    "test-local": "cross-env DB_ENV=testing jest --verbose"
   },
   "repository": {
     "type": "git",

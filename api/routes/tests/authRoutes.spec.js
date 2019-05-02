@@ -2,58 +2,48 @@ const server = require('../../server');
 const request = require('supertest');
 const db = require('../../../data/dbConfig');
 
-// function generateUser(){
-//   let id = 0;
-//   function createUser(){
-//     id++;
-//     return {
-//       username: `TestUser${id}`,
-//       password: 'testing',
-//       email: `TestEmail${id}@email.com`
-//     }
-//   }
-// }
+function generateUser(){
+  let id = 0;
+  return function createUser(){
+    id++;
+    return {
+      username: `TestUser${id}`,
+      password: 'testing',
+      email: `TestEmail${id}@email.com`
+    }
+  }
+}
 
-// const newUser = generateUser();
-
-const testUser = {
-  username: 'TestUser',
-  password: 'TestPassword',
-  email: 'TestEmail@email.com',
-};
-
-afterAll(done => done());
-
+const newUser = generateUser();
 describe('/POST /register', () => {
-  afterEach(async () => {
-    await db('users')
-      .where({ username: testUser.username })
-      .del();
+  afterAll(async () => {
+    await db('users').where('email', 'like', 'TestEmail%@email.com').del();
   });
   it('Should return appropriate response', async () => {
     const response = await request(server)
       .post('/register')
-      .send(testUser)
+      .send(newUser())
       .set('Content-Type', 'application/json');
     expect(response.status).toBe(201);
     expect(typeof response.body.token).toBe('string');
   });
 
   it('Should return 400 BAD REQUEST if duplicate data is sent', async () => {
+    const user = newUser();
     await request(server)
       .post('/register')
-      .send(testUser)
+      .send(user)
       .set('Content-Type', 'application/json');
     const response = await request(server)
       .post('/register')
-      .send(testUser)
+      .send(user)
       .set('Content-Type', 'application/json');
     expect(response.status).toBe(400);
     expect(response.body.error).toBe('Username and/or email already associated with an account.');
   });
 
   it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
-    const { username, ...malformedUser } = testUser;
+    const { username, ...malformedUser } = newUser();
     const response = await request(server)
       .post('/register')
       .send(malformedUser)
@@ -63,18 +53,10 @@ describe('/POST /register', () => {
 });
 
 describe('POST /login', () => {
-  beforeAll(async () => {
-    await request(server)
-      .post('/register')
-      .send(testUser)
-      .set('Content-Type', 'application/json');
-  });
-  afterAll(async () => {
-    await db('users')
-      .where({ username: testUser.username })
-      .del();
-  });
-  const { email, ...loginUser } = testUser;
+  const loginUser = {
+    username: 'john_doe',
+    password: 'password'
+  };
   it('Should return appropriate response', async () => {
     const response = await request(server)
       .post('/login')
