@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
     const isProvider = Boolean(credentials.providerId); // if providerId exists, it will convert to true
     return res.status(201).json({ token, isProvider });
   } catch (error) {
-    if (error.message.includes('UNIQUE constraint'))
+    if (/unique constraint/i.test(error.message))
       return res.status(400).json({ error: 'Username and/or email already associated with an account.' });
     else if (error.message === '400')
       return res.status(400).json({ error: 'Request must include values for username, password, and email keys.' })

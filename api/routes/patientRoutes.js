@@ -198,7 +198,7 @@ router.post('/:id/immunizations', async (req, res) => {
       return res
         .status(404)
         .json({ error: `No entry found in database with matching ${type}.` });
-    } else if (error.message.includes('UNIQUE constraint')) {
+    } else if (/unique constraint/i.test(error.message)) {
       return res
         .status(400)
         .json({ error: 'This record has already been added.' });
