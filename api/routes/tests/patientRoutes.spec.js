@@ -33,6 +33,7 @@ const db = require('../../../data/dbConfig');
         .set('Authorization', token);
       expect(response.status).toBe(400);
       } catch(error){
+        console.log('I AM ERROR', error);
         throw new Error();
       }
     });
