@@ -6,7 +6,8 @@
   "scripts": {
     "server": "nodemon index.js",
     "start": "node index.js",
-    "test": "cross-env DB_ENV=testing jest --watchAll --verbose --runInBand"
+    "test": "cross-env DB_ENV=testing_travis jest --verbose --runInBand",
+    "test-local": "cross-env DB_ENV=testing jest --watchAll --verbose --runInBand"
   },
   "repository": {
     "type": "git",
