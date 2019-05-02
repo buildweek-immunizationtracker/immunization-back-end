@@ -9,8 +9,9 @@ beforeAll(async () => {
     .set('Content-Type', 'application/json');
   token = `Bearer ${response.body.token}`;
 });
-afterAll(async () => {
-  await new Promise(resolve => setTimeout(() => resolve(), 500));
+afterAll(done => {
+  console.log('RUNNING DONE');
+  done();
 })
 describe('GET /user', () => {
   it('Should return appropriate response', async () => {

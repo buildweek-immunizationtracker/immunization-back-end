@@ -14,10 +14,6 @@ function generateUser(){
   }
 }
 
-afterAll(async () => {
-  await new Promise(resolve => setTimeout(() => resolve(), 500));
-})
-
 const newUser = generateUser();
 describe('/POST /register', () => {
   afterAll(async () => {
