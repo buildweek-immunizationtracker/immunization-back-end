@@ -8,4 +8,4 @@ before_script:
   - psql travis_ci_test -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";' -U postgres
   - knex migrate:latest --env testing_travis
   - knex seed:run --env testing_travis
-script: travis_wait 0.5 npm run test
+script: travis_wait 1 npm run test
