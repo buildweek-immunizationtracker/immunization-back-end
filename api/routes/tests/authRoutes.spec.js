@@ -2,6 +2,20 @@ const server = require('../../server');
 const request = require('supertest');
 const db = require('../../../data/dbConfig');
 
+// function generateUser(){
+//   let id = 0;
+//   function createUser(){
+//     id++;
+//     return {
+//       username: `TestUser${id}`,
+//       password: 'testing',
+//       email: `TestEmail${id}@email.com`
+//     }
+//   }
+// }
+
+// const newUser = generateUser();
+
 const testUser = {
   username: 'TestUser',
   password: 'TestPassword',
