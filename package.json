@@ -6,7 +6,7 @@
   "scripts": {
     "server": "nodemon index.js",
     "start": "node index.js",
-    "test": "cross-env DB_ENV=testing_travis jest --verbose --detectOpenHandles",
+    "test": "cross-env DB_ENV=testing_travis jest --verbose --detectOpenHandles --forceExit",
     "test-local": "cross-env DB_ENV=testing jest --verbose"
   },
   "repository": {

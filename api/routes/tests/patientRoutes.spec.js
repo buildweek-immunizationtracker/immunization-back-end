@@ -15,7 +15,6 @@ const db = require('../../../data/dbConfig');
       .set('Content-Type', 'application/json');
     token = `Bearer ${response.body.token}`;
   });
-  afterAll(() => db.destroy())
   it('Should return appropriate response',  async () => {
     const response = await request(server)
       .post('/patients')
