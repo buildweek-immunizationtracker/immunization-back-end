@@ -9,6 +9,9 @@ beforeAll(async () => {
     .set('Content-Type', 'application/json');
   token = `Bearer ${response.body.token}`;
 });
+afterAll(async () => {
+  await new Promise(resolve => setTimeout(() => resolve(), 500));
+})
 describe('GET /user', () => {
   it('Should return appropriate response', async () => {
     const response = await request(server)
