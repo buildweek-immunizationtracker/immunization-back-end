@@ -153,7 +153,8 @@ router.delete('/:id/consent', async (req, res) => {
     if (id !== patient.userId) throw new Error(403);
     const numberDeleted = await removeConsentFromProvider(patient.id, providerId);
     if (!numberDeleted) throw new Error(400);
-    res.status(200).json({ success: 'Consent removed successfully.' });
+    const providers = await getPermittedProviders(patient.id);
+    res.status(200).json({ providers });
   } catch (error) {
     if (error.message.includes('found with that ID.'))
       return res.status(404).json({ error: error.message });
