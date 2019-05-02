@@ -15,6 +15,7 @@ const db = require('../../../data/dbConfig');
       .set('Content-Type', 'application/json');
     token = `Bearer ${response.body.token}`;
   });
+  afterAll(() => db.destroy())
   it('Should return appropriate response',  async () => {
     const response = await request(server)
       .post('/patients')
@@ -26,15 +27,10 @@ const db = require('../../../data/dbConfig');
   describe('POST /patients', () => {
     it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
       const { lastName, ...incorrectPatient } = testPatient;
-      try {
       const response = await request(server)
         .post('/patients')
         .send(incorrectPatient)
         .set('Authorization', token);
       expect(response.status).toBe(400);
-      } catch(error){
-        console.log('I AM ERROR', error);
-        throw new Error();
-      }
     });
 });
