@@ -31,7 +31,7 @@ const testUser = {
 
   describe('POST /patients', () => {
     afterEach(async () => {
-      db('patients').where({ firstName: testPatient.firstName, lastName: testPatient.lastName }).del();
+      await db('patients').where({ firstName: testPatient.firstName, lastName: testPatient.lastName }).del();
     });
   
     it('Should return appropriate response',  async () => {
