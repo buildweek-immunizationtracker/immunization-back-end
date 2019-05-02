@@ -7,3 +7,4 @@ before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - psql travis_ci_test -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";' -U postgres
   - knex migrate:latest --env testing_travis
+script: npm test
