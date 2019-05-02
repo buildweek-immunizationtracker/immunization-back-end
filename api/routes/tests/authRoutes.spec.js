@@ -33,7 +33,7 @@ describe('/POST /register', () => {
       .send(testUser)
       .set('Content-Type', 'application/json');
     expect(response.status).toBe(400);
-    expect(response.body.error).toBe('Email or username already exists.');
+    expect(response.body.error).toBe('Username and/or email already associated with an account.');
   });
 
   it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
