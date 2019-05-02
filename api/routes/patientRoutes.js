@@ -135,7 +135,7 @@ router.post('/:id/consent', async (req, res) => {
     res.status(201).json({ success });
   } catch (error) {
     switch(error.message){
-      case 'Provider already has consent':
+      case 'Provider already has consent.':
         return res.status(400).json({ error: 'Provider already has consent' });
       case "403":
         return res.status(403).json({ error: 'Unauthorized' });
