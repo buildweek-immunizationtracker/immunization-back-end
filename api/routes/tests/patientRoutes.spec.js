@@ -20,15 +20,6 @@ const db = require('../../../data/dbConfig');
     done();
   });
   describe('POST /patients', () => {
-    it('Should return appropriate response',  async () => {
-      const response = await request(server)
-        .post('/patients')
-        .send(testPatient)
-        .set('Authorization', token);
-      expect(response.status).toBe(201);
-      expect(typeof response.body.success.id).toBe('string');
-    });
-  
     it('Should return 400 BAD REQUEST if mandatory keys are not sent', async () => {
       const { lastName, ...incorrectPatient } = testPatient;
       const response = await request(server)
@@ -36,5 +27,13 @@ const db = require('../../../data/dbConfig');
         .send(incorrectPatient)
         .set('Authorization', token);
       expect(response.status).toBe(400);
+    });
+    it('Should return appropriate response',  async () => {
+      const response = await request(server)
+        .post('/patients')
+        .send(testPatient)
+        .set('Authorization', token);
+      expect(response.status).toBe(201);
+      expect(typeof response.body.success.id).toBe('string');
     });
 });
