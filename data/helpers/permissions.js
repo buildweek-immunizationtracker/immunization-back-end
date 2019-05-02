@@ -26,7 +26,7 @@ async function giveConsentToProvider(patientId, providerId) {
       .insert({ patientId, providerId });
     return Promise.resolve(success);
   } catch (error) {
-    if (error.message.includes('UNIQUE constraint'))
+    if (/unique constraint/i.test(error.message))
       error.message = 'Provider already has consent.';
     return Promise.reject(error);
   }

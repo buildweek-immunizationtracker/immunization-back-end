@@ -394,7 +394,7 @@ _Output Schema_:
 
 ```js
 {
-    "success": "Consent removed successfully."
+    "providers": array
 }
 ```
 
