@@ -47,14 +47,20 @@ router.post('/', async (req, res) => {
     const [success] = await getPatient(id);
     res.status(201).json({ success });
   } catch (error) {
-    switch(error.message) {
+    switch (error.message) {
       case '400':
-        return res.status(400).json({ error: 'Request must include values for firstName, lastName, and birthDate keys.' });
+        return res.status(400).json({
+          error:
+            'Request must include values for firstName, lastName, and birthDate keys.',
+        });
       case '404':
-        return res.status(404).json({ error: 'No user found with that ID.' }); 
+        return res.status(404).json({ error: 'No user found with that ID.' });
       case '403':
-        return res.status(403).json({ error: 'Patients cannot be directly associated with a provider account.' });
-      default: 
+        return res.status(403).json({
+          error:
+            'Patients cannot be directly associated with a provider account.',
+        });
+      default:
         res.status(500).json({ error: error.message });
     }
   }
@@ -83,9 +89,11 @@ router.put('/:id', async (req, res) => {
     const success = await updatePatient(patient.id, keysToUpdate);
     res.json({ success });
   } catch (error) {
-    switch(error.message) {
+    switch (error.message) {
       case '400':
-        return res.status(400).json({ error: 'Please include values for keys to update.' });
+        return res
+          .status(400)
+          .json({ error: 'Please include values for keys to update.' });
       default:
         res.status(500).json({ error: error.message });
     }
@@ -99,9 +107,11 @@ router.delete('/:id', async (req, res) => {
     if (!numberDeleted) throw new Error(404);
     res.json({ numberDeleted });
   } catch (error) {
-    switch(error.message) {
+    switch (error.message) {
       case '404':
-        return res.status(404).json({ error: 'No patient with that ID found.' });
+        return res
+          .status(404)
+          .json({ error: 'No patient with that ID found.' });
       default:
         res.status(500).json({ error: error.message });
     }
@@ -116,8 +126,8 @@ router.get('/:id/consent', async (req, res) => {
     const providers = await getPermittedProviders(patient.id);
     res.json({ providers });
   } catch (error) {
-    switch(error.message) {
-      case "403":
+    switch (error.message) {
+      case '403':
         return res.status(403).json({ error: 'Unauthorized' });
       default:
         res.status(500).json({ error: error.message });
@@ -134,10 +144,10 @@ router.post('/:id/consent', async (req, res) => {
     const success = await giveConsentToProvider(patient.id, providerId);
     res.status(201).json({ success });
   } catch (error) {
-    switch(error.message){
+    switch (error.message) {
       case 'Provider already has consent.':
         return res.status(400).json({ error: 'Provider already has consent' });
-      case "403":
+      case '403':
         return res.status(403).json({ error: 'Unauthorized' });
       default:
         res.status(500).json({ error: error.message });
@@ -151,17 +161,22 @@ router.delete('/:id/consent', async (req, res) => {
     const patient = req.patient;
     const { providerId } = req.body;
     if (id !== patient.userId) throw new Error(403);
-    const numberDeleted = await removeConsentFromProvider(patient.id, providerId);
+    const numberDeleted = await removeConsentFromProvider(
+      patient.id,
+      providerId
+    );
     if (!numberDeleted) throw new Error(400);
     const providers = await getPermittedProviders(patient.id);
     res.status(200).json({ providers });
   } catch (error) {
     if (error.message.includes('found with that ID.'))
       return res.status(404).json({ error: error.message });
-    switch(error.message){
-      case "400":
-        return res.status(400).json({ error: 'Provider does not currently have consent' });
-      case "403":
+    switch (error.message) {
+      case '400':
+        return res
+          .status(400)
+          .json({ error: 'Provider does not currently have consent' });
+      case '403':
         return res.status(403).json({ error: 'Unauthorized' });
       default:
         res.status(500).json({ error: error.message });
@@ -193,7 +208,8 @@ router.post('/:id/immunizations', async (req, res) => {
     });
     res.status(201).json({ success });
   } catch (error) {
-    if (error.message.includes('violates foreign key constraint')) {
+    console.log(error.message);
+    if (/foreign key constraint/i.test(error.message)) {
       const type = error.message.match(/(?<=_)[a-zA-Z]+(?=_foreign"$)/)[0];
       return res
         .status(404)
@@ -202,8 +218,15 @@ router.post('/:id/immunizations', async (req, res) => {
       return res
         .status(400)
         .json({ error: 'This record has already been added.' });
-    } else if (error.message === "403"){
-      return res.status(403).json({ error: 'Immunziation records must be added by provider.' });
+    } else if (error.message === '403') {
+      return res
+        .status(403)
+        .json({ error: 'Immunziation records must be added by provider.' });
+    } else if (/null constraint/i.test(error.message)) {
+      return res.status(400).json({
+        error:
+          'Request must include valid values for both immunizationId and appointmentDate keys.',
+      });
     } else res.status(500).json({ error: error.message });
   }
 });

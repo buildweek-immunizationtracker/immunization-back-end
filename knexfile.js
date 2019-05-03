@@ -4,17 +4,17 @@ module.exports = {
   development: {
     // LOCAL PG:
 
-    // client: 'pg',
-    // connection: `postgres://${process.env.DB_USERNAME}:${
-    //   process.env.DB_PASSWORD
-    // }@localhost/immunizations`,
+    client: 'pg',
+    connection: `postgres://${process.env.DB_USERNAME}:${
+      process.env.DB_PASSWORD
+    }@localhost/immunizations`,
 
     // LOCAL SQLITE3:
 
-    client: 'sqlite3',
-    connection: {
-      filename: './data/dev.sqlite3',
-    },
+    // client: 'sqlite3',
+    // connection: {
+    //   filename: './data/dev.sqlite3',
+    // },
 
     migrations: {
       directory: './data/migrations',
@@ -22,37 +22,37 @@ module.exports = {
     seeds: {
       directory: './data/seeds/dev',
     },
-    pool: {
-      afterCreate: (conn, cb) => {
-        conn.run('PRAGMA foreign_keys = ON', cb);
-      },
-    },
+    // pool: {
+    //   afterCreate: (conn, cb) => {
+    //     conn.run('PRAGMA foreign_keys = ON', cb);
+    //   },
+    // },
     useNullAsDefault: true,
   },
 
   testing: {
     client: 'pg',
     // LOCAL PG:
-    // connection: `postgres://${process.env.DB_USERNAME}:${
-    //   process.env.DB_PASSWORD
-    // }@localhost/immunizations_test`,
+    connection: `postgres://${process.env.DB_USERNAME}:${
+      process.env.DB_PASSWORD
+    }@localhost/immunizations_test`,
 
     // LOCAL SQLITE3:
-    client: 'sqlite3',
-    connection: {
-      filename: './data/testing.sqlite3',
-    },
+    // client: 'sqlite3',
+    // connection: {
+    //   filename: './data/testing.sqlite3',
+    // },
     migrations: {
       directory: './data/migrations',
     },
     seeds: {
       directory: './data/seeds/testing',
     },
-    pool: {
-      afterCreate: (conn, cb) => {
-        conn.run('PRAGMA foreign_keys = ON', cb);
-      },
-    },
+    // pool: {
+    //   afterCreate: (conn, cb) => {
+    //     conn.run('PRAGMA foreign_keys = ON', cb);
+    //   },
+    // },
     useNullAsDefault: true,
   },
 
