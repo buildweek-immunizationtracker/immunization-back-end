@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+    - "10.15.3"
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql travis_ci_test -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";' -U postgres
+  - knex migrate:latest --env testing_travis
+  - knex seed:run --env testing_travis

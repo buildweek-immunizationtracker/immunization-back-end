@@ -1,26 +1,14 @@
 const server = require('../../server');
 const request = require('supertest');
 const db = require('../../../data/dbConfig');
-
-const testUser = {
-  username: 'TestUser',
-  password: 'TestPassword',
-  email: 'TestEmail',
-};
-
 let token;
 beforeAll(async () => {
   const response = await request(server)
-    .post('/register')
-    .send(testUser)
+    .post('/login')
+    .send({ username: 'john_doe', password: 'password' })
     .set('Content-Type', 'application/json');
   token = `Bearer ${response.body.token}`;
 });
-
-afterAll(async () => {
-  await db('users').where({ email: testUser.email }).del();
-})
-
 describe('GET /user', () => {
   it('Should return appropriate response', async () => {
     const response = await request(server)
@@ -28,23 +16,34 @@ describe('GET /user', () => {
       .set('Content-Type', 'application/json')
       .set('Authorization', token);
     expect(response.status).toBe(200);
-
   });
 });
-
 describe('PUT /user', () => {
+  let updateToken;
+  beforeAll(async () => {
+    const response = await request(server)
+      .post('/login')
+      .send({ username: 'jane_doe', password: 'password' })
+      .set('Content_Type', 'application/json');
+    updateToken = `Bearer ${response.body.token}`
+  });
+  afterAll(async () => {
+    await request(server)
+      .put('/user')
+      .send({ username: 'jane_doe' })
+      .set('Content_Type', 'application/json')
+      .set('Authorization', updateToken);
+  });
   it('Should modify user information', async () => {
     const response = await request(server)
       .put('/user')
       .send({ username: 'ThisIsARandomUsernameNobodyShouldHave' })
-      .set('Authorization', token);
+      .set('Authorization', updateToken);
     const user = response.body.success;
     expect(response.status).toBe(200);
     expect(user.username).toBe('ThisIsARandomUsernameNobodyShouldHave');
-    expect(user.email).toBe(testUser.email);
   });
 });
-
 describe('DELETE /user', () => {
   const userToBeDeleted = {
     username: 'DeadManWalking',

@@ -8,29 +8,23 @@ const { getUserByUsername, addUser, addProvider } = require('../../data/helpers'
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    if (!username || !password)
-      return res.status(400).json({
-        error: 'Request must include values for username and password.',
-      });
+    if (!username || !password) throw new Error(400);
     const [user] = await getUserByUsername(username);
-    if (!user || !bcrypt.compareSync(password, user.password))
-      throw new Error();
+    if (!user || !bcrypt.compareSync(password, user.password)) throw new Error();
     const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: '1d' });
-    const isProvider = Boolean(user.providerId); // providerId will only ever be above 0 - true if exists, false if is null
-    return res.json({ token, isProvider });
+    const isProvider = Boolean(user.providerId); // if providerId exists, it will convert to true
+    res.json({ token, isProvider });
   } catch (error) {
-    res.status(401).json({ error: 'Invalid credentials' });
+    if (error.message === '400')
+      return res.status(400).json({ error: 'Request must include values for username and password.' });
+    else res.status(401).json({ error: 'Invalid credentials' });
   }
 });
 
 router.post('/register', async (req, res) => {
   try {
     const { username, password, email, providerName } = req.body;
-    if (!username || !password || !email)
-      return res.status(400).json({
-        error:
-          'Request must include values for username, password, and email keys.',
-      });
+    if (!username || !password || !email) throw new Error(400);
     const credentials = { username, password, email };
     const hash = bcrypt.hashSync(credentials.password, 10);
     credentials.password = hash;
@@ -40,15 +34,14 @@ router.post('/register', async (req, res) => {
     const [id] = await addUser(credentials);
     if (!id) throw new Error();
     const token = jwt.sign({ id }, jwtSecret, { expiresIn: '1d' });
-    const isProvider = Boolean(credentials.providerId); // providerId will only ever be above 0 - true if exists, false if is null
+    const isProvider = Boolean(credentials.providerId); // if providerId exists, it will convert to true
     return res.status(201).json({ token, isProvider });
   } catch (error) {
-    if (error.message.includes('UNIQUE constraint')) {
-      return res
-        .status(400)
-        .json({ error: 'Email or username already exists.' });
-    }
-    res.status(401).json({ error: error.message });
+    if (/unique constraint/i.test(error.message))
+      return res.status(400).json({ error: 'Username and/or email already associated with an account.' });
+    else if (error.message === '400')
+      return res.status(400).json({ error: 'Request must include values for username, password, and email keys.' })
+    else res.status(500).json({ error: error.message })
   }
 });
 

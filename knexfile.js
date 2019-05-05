@@ -2,14 +2,20 @@
 require('dotenv').config();
 module.exports = {
   development: {
+    // LOCAL PG:
+
     client: 'pg',
     connection: `postgres://${process.env.DB_USERNAME}:${
       process.env.DB_PASSWORD
     }@localhost/immunizations`,
+
+    // LOCAL SQLITE3:
+
     // client: 'sqlite3',
     // connection: {
     //   filename: './data/dev.sqlite3',
     // },
+
     migrations: {
       directory: './data/migrations',
     },
@@ -26,9 +32,12 @@ module.exports = {
 
   testing: {
     client: 'pg',
+    // LOCAL PG:
     connection: `postgres://${process.env.DB_USERNAME}:${
       process.env.DB_PASSWORD
     }@localhost/immunizations_test`,
+
+    // LOCAL SQLITE3:
     // client: 'sqlite3',
     // connection: {
     //   filename: './data/testing.sqlite3',
@@ -44,6 +53,18 @@ module.exports = {
     //     conn.run('PRAGMA foreign_keys = ON', cb);
     //   },
     // },
+    useNullAsDefault: true,
+  },
+
+  testing_travis: {
+    client: 'pg',
+    connection: 'postgres://postgres@127.0.0.1:5432/travis_ci_test',
+    migrations: {
+      directory: './data/migrations',
+    },
+    seeds: {
+      directory: './data/seeds/testing',
+    },
     useNullAsDefault: true,
   },
 

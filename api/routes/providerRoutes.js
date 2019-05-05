@@ -20,11 +20,15 @@ router.get('/:id', async (req, res) => {
   try {
     const providerId = req.params.id;
     const [provider] = await getProvider(providerId);
-    if (!provider)
-      return res.status(404).json({ error: 'No provider found with that ID.' });
+    if (!provider) throw new Error(404);
     res.json({ provider });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    switch(error.message){
+      case "404":
+        return res.status(404).json({ error: 'No provider found with that ID.' });
+      default:
+        res.status(500).json({ error: error.message });
+    }
   }
 });
 
@@ -33,17 +37,20 @@ router.put('/:id', async (req, res) => {
     const userId = req.decoded.id;
     const providerId = req.params.id;
     const user = await getUser(userId);
-    if (user.providerId !== providerId)
-      return res.status(403).json({ error: 'Unauthorized' });
+    if (user.providerId !== providerId) throw new Error(403);
     const { name } = req.body;
-    if (!name)
-      return res
-        .status(400)
-        .json({ error: 'Please provide updated information in request body.' });
+    if (!name) throw new Error(400);
     const [success] = await updateProvider(providerId, { name });
     res.json({ success });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    switch(error.message){
+      case "403":
+        return res.status(403).json({ error: 'Unauthorized' });
+      case "400":
+        return res.status(400).json({ error: 'Please provide updated information in request body.' });
+      default:
+        res.status(500).json({ error: error.message });
+    }
   }
 });
 

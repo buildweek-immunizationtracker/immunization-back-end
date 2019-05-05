@@ -23,14 +23,7 @@ function getPatient(id) {
 
 function addPatient(patient) {
   return db('patients')
-    .returning([
-      'id',
-      'firstName',
-      'lastName',
-      'birthDate',
-      'userId',
-      'createdAt',
-    ])
+    .returning('id')
     .insert(patient);
 }
 
